@@ -1,0 +1,1198 @@
+/* Import */
+@import url('https://fonts.googleapis.com/css2?family=Allura&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Great+Vibes&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+/* General Global Setting */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    position: relative;
+    /*background: linear-gradient(to right, #24243e, #302b63, #0f0c29);*/
+    background: #F8F4FF;
+    font-family: "Roboto", sans-serif;
+    width: 100%;
+    height: 100%;
+}
+
+/*============================================================================================
+    # Wrapper Overlay
+============================================================================================*/
+.wrapper {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: #F8F4FF;
+    transition: opacity 0.5s ease;
+}
+
+.wrapper.hidden {
+    opacity: 0;
+    /* Fade out effect when 'hidden' class is added */
+}
+
+/* Overlay that covers the entire viewport */
+.overlay {
+    width: 420px;
+    /* Same width as the card-container */
+    height: 100%;
+    /* Blur the background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+    background-image: url('../images/intro-bg.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+/* Center the button within the overlay */
+.overlay .overlay-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    backdrop-filter: blur(3px);
+}
+
+/* Circular toggle button */
+.overlay .overlay-content .toggle-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+    font-size: 24px;
+    cursor: pointer;
+    border: none;
+}
+
+.overlay .overlay-content .toggle-button p {
+    margin: 0;
+    padding: 0;
+    font-size: 30px;
+    font-weight: 500;
+    font-family: "Great Vibes", cursive;
+    color: #302b63;
+}
+
+.overlay .overlay-content .toggle-button .buka {
+    font-size: 16px;
+    font-family: 300;
+    font-family: "Bebas Neue", Arial, sans-serif;
+    margin-top: 10px;
+}
+
+
+
+
+
+
+/*============================================================================================
+    # Animation
+============================================================================================*/
+.reveal.active {
+    opacity: 1;
+}
+
+.active.fade-bottom {
+    animation: fade-bottom 1s ease-in-out;
+}
+
+@keyframes fade-bottom {
+    0% {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.fade-top-1 {
+    animation: growth 0.5s ease-in-out;
+}
+
+.fade-top-2 {
+    animation: growth 0.8s ease-in-out;
+}
+
+.fade-top-3 {
+    animation: growth 1s ease-in-out;
+}
+
+.fade-top-4 {
+    animation: growth 1.2s ease-in-out;
+}
+
+@keyframes growth {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+        /* transform: translateY(-50px);
+        opacity: 0; */
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+        /* transform: translateY(0);
+        opacity: 1; */
+    }
+}
+
+.divider {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    width: 50%;
+    height: 20px;
+}
+
+/*============================================================================================
+    # Background Animation
+============================================================================================*/
+.petal-container {
+    position: absolute;
+    z-index: 0;
+    width: 100%;
+    /* Full width within the card */
+    height: 100%;
+    /* Full height within the card */
+    top: 0;
+    left: 0;
+}
+
+.petal {
+    position: absolute;
+    left: -10px;
+    /* Start just off the left edge of the card */
+    background: linear-gradient(to right, #24243e, #302b63, #0f0c29);
+    border-radius: 50%;
+    /* Rounded shape */
+    opacity: 0.5;
+    animation: fall 60s linear;
+    /* Animation duration */
+}
+
+@keyframes fall {
+    0% {
+        transform: translateX(0) rotate(0deg);
+        /* Initial state */
+    }
+
+    100% {
+        transform: translateX(var(--translate-x)) translateY(var(--translate-y)) rotate(720deg);
+        /* Diagonal path with variable translation */
+    }
+}
+
+
+/*============================================================================================
+    # Card
+============================================================================================*/
+.card {
+    display: none;
+    max-width: 420px;
+    margin: 0 auto;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+    background: white;
+    border-radius: 3px;
+    font-size: 14px;
+    line-height: 16px;
+    font-family: "Roboto", sans-serif;
+    position: relative;
+    overflow: hidden;
+}
+
+section {
+    display: block;
+    unicode-bidi: isolate;
+}
+
+/*============================================================================================
+    # Intro
+============================================================================================*/
+.card section.intro {
+    background: url(../images/intro2-bg.png), linear-gradient(to right, #F8F4FF, #f9fcff, #F8F4FF);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+    z-index: 500;
+    border-bottom: 1px solid rgb(195, 195, 195);
+}
+
+.card section.intro .content {
+    display: block;
+    padding: 200px 0px;
+    text-align: center;
+}
+
+.card section.intro .content img {
+    width: 50%;
+    height: 10%;
+}
+
+.card section.intro .content p {
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.card section.intro .content p.title {
+    margin-top: 30px;
+    margin-bottom: 30px;
+    color: #111111;
+    text-transform: uppercase;
+    font-size: 16px;
+    font-weight: 700;
+    font-family: "Roboto", sans-serif;
+    letter-spacing: 1px;
+}
+
+.card section.intro .content h2 {
+    margin-top: 50px;
+    margin-bottom: 50px;
+    font-family: "Allura", cursive;
+    font-size: 48px;
+    font-weight: 500;
+    color: #111111;
+}
+
+.card section.intro .content .date {
+    color: #111111;
+    font-family: "Roboto", sans-serif;
+    letter-spacing: 1px;
+    font-size: 16px;
+}
+
+
+
+
+/*============================================================================================
+    # Event Info
+============================================================================================*/
+.card section.info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 50px 0px;
+    background: linear-gradient(to right, #F8F4FF, #f9fcff, #F8F4FF);
+    min-height: 100vh;
+}
+
+.card section.info .assalamualaikum {
+    width: 80%;
+    height: 30%;
+    object-fit: cover;
+    position: relative;
+    z-index: 500;
+}
+
+.card section.info .event-info {
+    width: 75%;
+    text-align: center;
+    position: relative;
+    z-index: 500;
+}
+
+.card section.info .event-info p {
+    font-family: "Roboto", sans-serif;
+    color: #111111;
+}
+
+.card section.info .event-info .one {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+}
+
+.card section.info .event-info .three,
+.card section.info .event-info .four {
+    margin-bottom: 15px;
+}
+
+.card section.info .event-info .one p,
+.card section.info .event-info .three p,
+.card section.info .event-info .four p,
+.card section.info .event-info .five p {
+    color: #111111;
+    font-weight: 300;
+    font-size: 14px;
+    letter-spacing: 1px;
+}
+
+.card section.info .event-info .one .parent {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    gap: 5px;
+}
+
+.card section.info .event-info .one .parent p {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.card section.info .event-info .two {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    gap: 15px;
+}
+
+.card section.info .event-info .two p {
+    font-family: "Playfair Display", serif;
+    color: darkcyan;
+    font-weight: 700;
+    font-size: 18px;
+}
+
+.card section.info .event-info .three .title,
+.card section.info .event-info .four .title,
+.card section.info .event-info .five .title {
+    margin-top: 30px;
+}
+
+.card section.info .event-info .three .title,
+.card section.info .event-info .four .title,
+.card section.info .event-info .five .title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+
+
+
+/*============================================================================================
+    # Countdown Timer
+============================================================================================*/
+.card section.info .countdown .counter h1,
+.card section.info .countdown .counter h2,
+.card section.info .countdown .counter h3,
+.card section.info .countdown .counter h4,
+.card section.info .countdown .counter h5 {
+    font-family: "Bebas Neue", Arial, sans-serif;
+    font-weight: 400;
+    color: #efebe0;
+    padding: 0;
+    margin: 0;
+}
+
+.card section.info .countdown .counter p,
+.card section.info .countdown .counter span {
+    color: #d6d6d6b3;
+}
+
+
+.card section.info .countdown .container {
+    flex-grow: 1;
+    margin: 0 auto;
+    position: relative;
+    width: auto;
+}
+
+@media screen and (min-width: 1024px) {
+    .card section.info .countdown .container {
+        max-width: 960px;
+    }
+}
+
+@media screen and (min-width: 1204px) {
+    .card section.info .countdown .container {
+        max-width: 1140px;
+    }
+
+    .card section.info .countdown .container {
+        max-width: 1140px;
+    }
+}
+
+.card section.info .countdown .hero {
+    background: transparent;
+    min-height: 70vh;
+}
+
+@media screen and (max-width: 768px) {
+    .card section.info .countdown .hero {
+        min-height: auto;
+    }
+}
+
+.card section.info .countdown .hero .hero-body .campaign {
+    flex-direction: column;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.card section.info .countdown .hero.connect-page {
+    min-height: auto;
+}
+
+.card section.info .countdown .hero .hero-body {
+    padding: 32px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+@media screen and (max-width: 768px) {
+    .card section.info .countdown .hero .hero-body {
+        padding: 2rem 0;
+    }
+}
+
+.card section.info .countdown .section.pair .pair-steps .step .step-number .value {
+    color: #fff;
+    font-weight: 700;
+    font-size: 3rem;
+}
+
+.card section.info .countdown .hero .hero-body .counter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 3rem 0;
+}
+
+@media screen and (max-width: 768px) {
+    .card section.info .countdown .hero .hero-body .counter {
+        margin: 2rem 0 0;
+    }
+}
+
+.card section.info .countdown .hero .hero-body .counter .title {
+    color: #9c9c9c;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 1px 2px #0003;
+}
+
+.card section.info .countdown .hero .hero-body .counter .counter-boxes {
+    display: flex;
+    flex-direction: row;
+}
+
+.card section.info .countdown .hero .hero-body .counter .counter-boxes .count-box {
+    background-color: #1a1c1ccc;
+    box-shadow: 0 5px 10px #0000004d;
+    border-radius: 8px;
+    backdrop-filter: blur(5px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    height: 100px;
+    margin-right: 4px;
+    text-shadow: 0 1px 0 #0000004d;
+}
+
+@media screen and (max-width: 768px) {
+    .card section.info .countdown .hero .hero-body .counter .counter-boxes .count-box {
+        width: 70px;
+        height: 70px;
+    }
+}
+
+.card section.info .countdown .hero .hero-body .counter .counter-boxes .count-box h1 {
+    color: #fff;
+    padding: 8px 0 0;
+    margin: 0;
+    font-size: 2.5rem;
+    line-height: 2rem;
+}
+
+@media screen and (max-width: 768px) {
+    .card section.info .countdown .hero .hero-body .counter .counter-boxes .count-box h1 {
+        font-size: 2rem;
+    }
+}
+
+.card section.info .countdown .hero .hero-body .counter .counter-boxes .count-box span {
+    color: #9c9c9c;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+@media screen and (max-width: 768px) {
+    .card section.info .countdown .hero .hero-body .counter .counter-boxes .count-box span {
+        font-size: 10px;
+        letter-spacing: 0;
+    }
+}
+
+.card section.info .countdown .hero .hero-body .counter .counter-boxes .count-box:last-of-type {
+    margin-right: 0;
+}
+
+.card section.info .countdown .container {
+    width: 100%;
+    z-index: 500;
+}
+
+
+
+/*============================================================================================
+    # Aturcara
+============================================================================================*/
+.card section.info .aturcara {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    z-index: 500;
+    position: relative;
+}
+
+.card section.info .aturcara p {
+    font-family: "Roboto", sans-serif;
+    text-align: center;
+    letter-spacing: 1px;
+    color: #111111;
+}
+
+.card section.info .aturcara .title {
+    color: #111111;
+    font-family: "Roboto", sans-serif;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 18px;
+}
+
+.card section.info .aturcara .one,
+.card section.info .aturcara .two,
+.card section.info .aturcara .three,
+.card section.info .aturcara .four {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.card section.info .aturcara .one p,
+.card section.info .aturcara .two p,
+.card section.info .aturcara .three p,
+.card section.info .aturcara .four p {
+    color: #111111;
+    font-weight: 300;
+    font-size: 14px;
+    letter-spacing: 1px;
+}
+
+.card section.info .aturcara .one p:nth-child(2),
+.card section.info .aturcara .two p:nth-child(2),
+.card section.info .aturcara .three p:nth-child(2),
+.card section.info .aturcara .four p:nth-child(2) {
+    color: darkgrey;
+}
+
+
+
+
+
+/*============================================================================================
+    # Ucapan
+============================================================================================*/
+.card section.info .ucapan .container {
+    position: relative;
+    max-width: 420px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 30px;
+    z-index: 500;
+}
+
+.card section.info .ucapan .content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    width: 85%;
+}
+
+.card section.info .ucapan .content p {
+    font-size: 16px;
+    font-family: 'Cormorant Garamond', serif;
+    margin: 0;
+    text-align: center;
+}
+
+.card section.info .ucapan img {
+    width: 100%;
+    height: auto;
+}
+
+
+
+/*============================================================================================
+    # RSVP
+============================================================================================*/
+.card section.info .rsvp {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 30px;
+    margin-bottom: 50px;
+    z-index: 500;
+}
+
+.card section.info .rsvp h2 {
+    text-transform: uppercase;
+    color: #111111;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.card section.info .rsvp .container-message {
+    width: 95%;
+    height: 450px;
+    overflow-y: auto;
+    padding: 0px 16px;
+    border-top: 1px solid wheat;
+    border-bottom: 1px solid wheat;
+}
+
+.card section.info .rsvp .container-message .content {
+    overflow: hidden;
+    width: 100%;
+    white-space: normal;
+    text-overflow: ellipsis;
+    border-bottom: 1px solid #DDDDDD;
+}
+
+.card section.info .rsvp .container-message .content p {
+    font-size: 16px;
+    font-family: 'Cormorant Garamond', serif;
+    margin: 0;
+    text-align: left;
+}
+
+.card section.info .rsvp .container-message .content p.name {
+    color: darkcyan;
+    margin-top: 10px;
+}
+
+.card section.info .rsvp .container-message .content p.name::before {
+    content: '--';
+    color: grey;
+    font-size: 0.9em;
+    margin-right: 8px;
+}
+
+.card section.info .rsvp .container-message .content p.name::after {
+    content: '--';
+    color: grey;
+    font-size: 16px;
+    margin-left: 8px;
+}
+
+.card section.info .rsvp .container-message .content p.message {
+    color: darkgrey;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.card section.info .rsvp .container-message .content-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.card section.info .rsvp .container-message .content-empty p.empty-message {
+    color: darkgray;
+    text-align: center;
+}
+
+
+.card section.info .rsvp .container-message::-webkit-scrollbar {
+    width: 2px;
+    background-color: #ADD8E6;
+}
+
+.card section.info .rsvp .container-message::-webkit-scrollbar-thumb {
+    box-shadow: inset 0 0 6px rgb(114, 243, 243);
+    -webkit-box-shadow: inset 0 0 6px rgb(1, 66, 66);
+    background-color: navy;
+    border-radius: 12px;
+}
+
+.card section.info .rsvp .beri-ucapan-button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+    margin-bottom: 50px;
+    gap: 5px;
+}
+
+.card section.info .rsvp .beri-ucapan-button button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 0px;
+    width: 45%;
+    border-radius: 10px;
+    border: 1px solid grey;
+    /* background: linear-gradient(90deg, #E5BDF6, #D8DEDE) !important; */
+    /* background: linear-gradient(to right, #24243e, #302b63, #0f0c29); */
+    background: #F8F4FF;
+    cursor: pointer;
+    gap: 10px;
+}
+
+.card section.info .rsvp .beri-ucapan-button button:hover {
+    /* background: linear-gradient(90deg, #E5BDF6, #D8DEDE) !important; */
+    /* background: linear-gradient(to right, #24243e, #302b63, #0f0c29); */
+    background: #F8F4FF;
+    opacity: 0.8;
+}
+
+.card section.info .rsvp .beri-ucapan-button button .bx {
+    font-size: 16px;
+    color: darkcyan;
+}
+
+.card section.info .rsvp .beri-ucapan-button button span {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+
+/*============================================================================================
+    # Footer
+============================================================================================*/
+.footer {
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.footer ul.menu {
+    max-width: 420px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+    background: linear-gradient(to right, #24243e, #302b63, #0f0c29);
+    border-radius: 20px 20px 0 0;
+    height: 4rem;
+    padding: 0 16px;
+    margin: 0 auto;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.footer ul.menu li {
+    cursor: pointer;
+}
+
+.footer .bx {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+
+
+
+
+/*============================================================================================
+    # Bottom Toggle
+============================================================================================*/
+.toggle-menu {
+    position: fixed;
+    bottom: -100%;
+    left: 0;
+    right: 0;
+    max-width: 400px;
+    margin: 0 auto;
+    background: linear-gradient(to right, #24243e, #302b63, #0f0c29);
+    box-shadow: 0 -10px 20px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    transition: bottom 0.4s;
+    z-index: 1000;
+    border-radius: 10px;
+}
+
+.toggle-menu.open {
+    bottom: 10%;
+}
+
+.toggle-menu h1 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: white;
+    text-transform: uppercase;
+}
+
+.toggle-menu .calendar,
+.toggle-menu .location,
+.toggle-menu .music,
+.toggle-menu .rsvp,
+.toggle-menu .contact,
+.toggle-menu .ucapan-tetamu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+}
+
+.toggle-menu .calendar p {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.toggle-menu .calendar p span {
+    font-size: 16px;
+    font-family: 'Cormorant Garamond', serif;
+    color: white;
+}
+
+.toggle-menu .calendar .button {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.toggle-menu .calendar .button button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 5px;
+    width: 250px;
+    height: 40px;
+    cursor: pointer;
+    background: #F8F4FF;
+}
+
+.toggle-menu .calendar .button button:hover {
+    background: #F8F4FF;
+    opacity: 0.9;
+}
+
+.toggle-menu .calendar .button button .bx {
+    font-size: 20px;
+    margin-right: 5px;
+}
+
+.toggle-menu .calendar .button button .bxl-google,
+.toggle-menu .location .button button .bxl-google {
+    background: linear-gradient(to bottom left, transparent 49%, #fbbc05 50%) 0 25%/48% 40%,
+        linear-gradient(to top left, transparent 49%, #fbbc05 50%) 0 75%/48% 40%,
+        linear-gradient(-40deg, transparent 53%, #ea4335 54%),
+        linear-gradient(45deg, transparent 46%, #4285f4 48%), #34a853;
+    background-repeat: no-repeat;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+}
+
+.toggle-menu .calendar .button button span {
+    font-size: 16px;
+    font-family: 'Cormorant Garamond', serif;
+}
+
+.toggle-menu .location p {
+    font-size: 16px;
+    font-weight: 300;
+    font-family: 'Cormorant Garamond', serif;
+    color: white;
+}
+
+.toggle-menu .location .button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 10px;
+}
+
+.toggle-menu .location .button button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 5px;
+    width: 180px;
+    height: 35px;
+    cursor: pointer;
+    background: #F8F4FF;
+}
+
+.toggle-menu .location .button button:hover {
+    background: #F8F4FF;
+    opacity: 0.9;
+}
+
+.toggle-menu .location .button button .bx,
+.toggle-menu .location .button button .fa-waze {
+    font-size: 20px;
+    margin-right: 5px;
+}
+
+#music-menu {
+    padding: 20px 6px;
+}
+
+.toggle-menu .music p {
+    font-size: 16px;
+    font-family: 'Cormorant Garamond', serif;
+    color: wheat;
+    text-align: center;
+}
+
+#audio-player {
+    margin-top: 20px;
+    width: 100%;
+}
+
+.toggle-menu .rsvp .button {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 10px;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.toggle-menu .rsvp .button button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60%;
+    padding: 8px 6px;
+    border: none;
+    border-radius: 5px;
+    gap: 5px;
+    cursor: pointer;
+    background: #F8F4FF;
+}
+
+.toggle-menu .rsvp .button button:hover {
+    background: #F8F4FF;
+    opacity: 0.9;
+}
+
+.toggle-menu .rsvp .button button i {
+    font-size: 24px;
+}
+
+.toggle-menu .rsvp .button #btn-hadir i {
+    color: green;
+}
+
+.toggle-menu .rsvp .button #btn-tidak-hadir i {
+    color: red;
+}
+
+.toggle-menu .contact .content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 5px;
+}
+
+.toggle-menu .contact .content .person {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.toggle-menu .contact .content .person button {
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.toggle-menu .contact .content .person .first-section {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    justify-content: center;
+}
+
+.toggle-menu .contact .content .person .first-section .bx {
+    font-size: 30px;
+    color: darkcyan;
+}
+
+.toggle-menu .contact .content .person .first-section .name {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.toggle-menu .contact .content .person .first-section .name span {
+    font-size: 16px;
+    font-family: 'Cormorant Garamond', serif;
+    color: #F8F4FF;
+    font-weight: 700;
+}
+
+.toggle-menu .contact .content .person .first-section .name span:nth-child(2) {
+    font-style: italic;
+    font-weight: 300;
+    font-size: 12;
+    color: lightgray;
+}
+
+.toggle-menu .contact .content .person .second-section {
+    display: flex;
+    gap: 10px;
+}
+
+.toggle-menu .contact .content .person .second-section .bx {
+    color: #F8F4FF;
+    font-size: 30px;
+}
+
+.toggle-menu .ucapan-tetamu form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.toggle-menu .ucapan-tetamu form label {
+    text-align: center;
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+    font-family: 'Cormorant Garamond', serif;
+}
+
+.toggle-menu .ucapan-tetamu form input {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 12px;
+    outline: none;
+}
+
+.toggle-menu .ucapan-tetamu form textarea {
+    width: 100%;
+    resize: none;
+    padding: 12px 16px;
+    outline: none;
+    border-radius: 12px;
+}
+
+.toggle-menu .ucapan-tetamu .button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.toggle-menu .ucapan-tetamu .button button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 6px;
+    cursor: pointer;
+    background: #F8F4FF;
+    gap: 5px;
+}
+
+.toggle-menu .ucapan-tetamu .button button:hover {
+    background: #F8F4FF;
+    opacity: 0.9;
+}
+
+.toggle-menu .ucapan-tetamu .button button i {
+    font-size: 24px;
+}
+
+.toggle-menu .ucapan-tetamu .button button i.bxs-paper-plane {
+    color: darkcyan;
+}
+
+.toggle-menu .ucapan-tetamu .button button i.bx-x {
+    color: red;
+}
+
+.toggle-menu .success-message {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 16px 16px 20px 16px;
+    gap: 10px;
+}
+
+.toggle-menu .success-message i {
+    font-size: 64px;
+    color: greenyellow;
+}
+
+.toggle-menu .success-message .bx.bxs-sad {
+    color: grey;
+}
+
+.toggle-menu .success-message p {
+    font-size: 16px;
+    font-weight: 300;
+    font-family: 'Cormorant Garamond', serif;
+    color: white;
+}
+
+
+/*============================================================================================
+    # Image Carousel
+============================================================================================*/
