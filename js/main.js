@@ -279,18 +279,15 @@ document.addEventListener("DOMContentLoaded", function () {
     /* =========================================================
        GOOGLE MAPS
        ========================================================= */
+function openGoogleMaps() {
+    const latitude = 2.3807618;
+    const longitude = 103.7116231;
 
-    function openGoogleMaps() {
-
-        const googleMapsUrl =
-            "https://www.google.com/maps/search/?api=1&query=" +
-            encodeURIComponent(weddingAddress);
-
-        window.open(
-            googleMapsUrl,
-            "_blank"
-        );
-    }
+    window.open(
+        `https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}`,
+        '_blank'
+    );
+                          }
 
 
     /* =========================================================
