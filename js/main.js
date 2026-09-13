@@ -293,20 +293,16 @@ function openGoogleMaps() {
     /* =========================================================
        WAZE
        ========================================================= */
+function openWaze() {
+    const latitude = 2.3807618;
+    const longitude = 103.7116231;
 
-    function openWaze() {
-
-        const wazeUrl =
-            "https://www.waze.com/ul?q=" +
-            encodeURIComponent(weddingAddress) +
-            "&navigate=yes";
-
-        window.open(
-            wazeUrl,
-            "_blank"
-        );
-    }
-
+    window.open(
+        `https://www.waze.com/ul?ll=${latitude}%2C${longitude}&navigate=yes`,
+        '_blank'
+    );
+                          }
+  
 
     /* =========================================================
        CONTACT
