@@ -1069,13 +1069,13 @@ document.addEventListener("DOMContentLoaded", function () {
        CLOSE UCAPAN
        ========================================================= */
 
-    const closeButton =
-        document.querySelector(
-            "#ucapan-menu .tutup"
-        );
+   /* =========================================================
+   CLOSE BUTTON X SEMUA MENU
+   ========================================================= */
 
-
-    if (closeButton) {
+document
+    .querySelectorAll(".menu-close")
+    .forEach(function (closeButton) {
 
         closeButton.addEventListener(
             "click",
@@ -1084,25 +1084,32 @@ document.addEventListener("DOMContentLoaded", function () {
                 event.preventDefault();
                 event.stopPropagation();
 
-
-                const menu =
-                    document.getElementById(
-                        "ucapan-menu"
+                const menuId =
+                    closeButton.getAttribute(
+                        "data-close"
                     );
 
+                if (menuId) {
 
-                if (menu) {
+                    const menu =
+                        document.getElementById(
+                            menuId
+                        );
 
-                    menu.classList.remove(
-                        "open"
-                    );
+                    if (menu) {
+
+                        menu.classList.remove(
+                            "open"
+                        );
+
+                    }
 
                 }
 
             }
         );
 
-    }
+    });
 
 
     /* =========================================================
