@@ -1065,16 +1065,12 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
 
-    /* =========================================================
-       CLOSE UCAPAN
-       ========================================================= */
-
-   /* =========================================================
-   CLOSE BUTTON X SEMUA MENU
+/* =========================================================
+   CLOSE / TUTUP SEMUA MENU
    ========================================================= */
 
 document
-    .querySelectorAll(".menu-close")
+    .querySelectorAll(".toggle-menu .tutup")
     .forEach(function (closeButton) {
 
         closeButton.addEventListener(
@@ -1084,25 +1080,16 @@ document
                 event.preventDefault();
                 event.stopPropagation();
 
-                const menuId =
-                    closeButton.getAttribute(
-                        "data-close"
+                const menu =
+                    closeButton.closest(
+                        ".toggle-menu"
                     );
 
-                if (menuId) {
+                if (menu) {
 
-                    const menu =
-                        document.getElementById(
-                            menuId
-                        );
-
-                    if (menu) {
-
-                        menu.classList.remove(
-                            "open"
-                        );
-
-                    }
+                    menu.classList.remove(
+                        "open"
+                    );
 
                 }
 
@@ -1110,6 +1097,7 @@ document
         );
 
     });
+
 
 
     /* =========================================================
