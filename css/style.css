@@ -803,7 +803,7 @@ li {
     margin: 35px 0;
 
     font-family:"Sweet Apricot", serif;
-    font-size: clamp(30px, 12v, 58px);
+    font-size: clamp(30px, 12vw, 58px);
 
     line-height: 1;
 
