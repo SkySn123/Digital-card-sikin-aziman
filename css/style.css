@@ -449,13 +449,11 @@ li {
 
     overflow: hidden;
 
+    background-color: var(--paper);
     background-image: url("../Image/background paper.jpg");
     background-repeat: repeat-y;
     background-position: top center;
     background-size: 100% auto;
-
-    box-shadow:
-        0 0 50px rgba(23,59,108,.18);
 }
 
 
@@ -614,7 +612,9 @@ li {
     background-image: url("../Image/Background 1.jpg");
     background-repeat: no-repeat;
     background-position: center center;
-    background-size: 120% auto;
+    background-size: cover;
+
+    background-color: var(--paper);
 }
 
 .intro::before,
