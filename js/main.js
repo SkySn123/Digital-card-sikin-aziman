@@ -80,69 +80,143 @@ document.addEventListener("DOMContentLoaded", () => {
         weddingOpening.classList.remove("opening-hide");
     }
 
+/* =====================================================
+   VIDEO INTRO + MUSIC
+   VIDEO BERMAIN DAHULU SELAMA 11 SAAT
+   LAGU CUBA BERMULA BERSAMA VIDEO
+   ===================================================== */
 
-    /* =====================================================
-       VIDEO INTRO
-       VIDEO BERMAIN DAHULU SELAMA 11 SAAT
-       ===================================================== */
+function showWeddingOpening() {
 
-    function showWeddingOpening() {
+    if (openingShown) {
+        return;
+    }
 
-        if (openingShown) {
-            return;
-        }
-
-        openingShown = true;
-
-
-        /* Hentikan video */
-
-        if (openingVideo) {
-            openingVideo.pause();
-        }
+    openingShown = true;
 
 
-        /* Hilangkan video */
+    /* -----------------------------------------
+       Hentikan video
+       ----------------------------------------- */
 
-        if (videoIntro) {
-            videoIntro.classList.add("hide");
-        }
-
-
-        /* Paparkan opening */
-
-        if (weddingOpening) {
-            weddingOpening.classList.remove(
-                "opening-hide"
-            );
-
-            weddingOpening.classList.add(
-                "show"
-            );
-        }
-
+    if (openingVideo) {
+        openingVideo.pause();
     }
 
 
-    /* =====================================================
-       MULAKAN VIDEO
-       ===================================================== */
+    /* -----------------------------------------
+       Hilangkan video
+       ----------------------------------------- */
 
-    function startOpeningVideo() {
+    if (videoIntro) {
+        videoIntro.classList.add("hide");
+    }
 
-        if (!openingVideo) {
-            return;
+
+    /* -----------------------------------------
+       Paparkan opening
+       ----------------------------------------- */
+
+    if (weddingOpening) {
+
+        weddingOpening.classList.remove(
+            "opening-hide"
+        );
+
+        weddingOpening.classList.add(
+            "show"
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   MULAKAN LAGU
+   ===================================================== */
+
+function startMusicAtBeginning() {
+
+    if (!audioPlayer) {
+        return;
+    }
+
+
+    audioPlayer.loop = true;
+    audioPlayer.volume = 0.8;
+
+
+    /*
+     * Pastikan lagu bermula dari awal
+     */
+    audioPlayer.currentTime = 0;
+
+
+    /*
+     * Cuba autoplay lagu bersama video
+     */
+    audioPlayer.play()
+        .catch(error => {
+
+            console.log(
+                "Autoplay audio disekat browser:",
+                error
+            );
+
+        });
+
+}
+
+
+/* =====================================================
+   FALLBACK AUDIO
+   JIKA BROWSER BLOCK AUTOPLAY
+   ===================================================== */
+
+document.addEventListener(
+    "pointerdown",
+    () => {
+
+        if (
+            audioPlayer &&
+            audioPlayer.paused
+        ) {
+
+            audioPlayer.play()
+                .catch(() => {});
+
         }
 
+    },
+    {
+        once: true
+    }
+);
+
+
+/* =====================================================
+   MULAKAN VIDEO
+   ===================================================== */
+
+function startOpeningVideo() {
+
+    if (openingVideo) {
+
         try {
-            openingVideo.currentTime = VIDEO_START;
+
+            openingVideo.currentTime =
+                VIDEO_START;
+
         }
 
         catch (error) {
+
             console.log(
                 "Tidak dapat set video ke 0 saat:",
                 error
             );
+
         }
 
 
@@ -189,157 +263,34 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    startOpeningVideo();
+    /*
+     * LAGU MULA SEKARANG
+     * BUKAN MASA TEKAN BUKA
+     */
+    startMusicAtBeginning();
+
+}
 
 
-    /* =====================================================
-       TIMER TEPAT 11 SAAT
-       TIDAK TUNGGU VIDEO HABIS
-       ===================================================== */
+/* =====================================================
+   START VIDEO + MUSIC
+   ===================================================== */
 
-    setTimeout(() => {
-
-        showWeddingOpening();
-
-    }, VIDEO_DURATION);
+startOpeningVideo();
 
 
-    /* =====================================================
-       OPEN INVITATION
-       ===================================================== */
+/* =====================================================
+   TIMER TEPAT 11 SAAT
+   TIDAK TUNGGU VIDEO HABIS
+   ===================================================== */
 
-    if (waxSeal) {
+setTimeout(() => {
 
-        waxSeal.addEventListener(
-            "click",
-            event => {
+    showWeddingOpening();
 
-                event.preventDefault();
-                event.stopPropagation();
+}, VIDEO_DURATION);
 
-
-                if (invitationOpened) {
-                    return;
-                }
-
-                invitationOpened = true;
-
-
-                /* -----------------------------------------
-                   Pastikan video berhenti
-                   ----------------------------------------- */
-
-                if (openingVideo) {
-                    openingVideo.pause();
-                }
-
-
-                if (videoIntro) {
-                    videoIntro.classList.add("hide");
-                }
-
-
-                /* -----------------------------------------
-                   Paparkan card
-                   ----------------------------------------- */
-
-                if (card) {
-
-                    card.style.display = "block";
-
-                    window.scrollTo({
-                        top: 0,
-                        behavior: "auto"
-                    });
-
-                }
-
-
-                /* -----------------------------------------
-                   Hilangkan opening
-                   ----------------------------------------- */
-
-                if (weddingOpening) {
-
-                    weddingOpening.classList.remove(
-                        "show"
-                    );
-
-                    weddingOpening.classList.add(
-                        "opening-hide"
-                    );
-
-                }
-
-
-                /* -----------------------------------------
-                   Buka double door
-                   ----------------------------------------- */
-
-                setTimeout(() => {
-
-                    if (doorScreen) {
-
-                        doorScreen.style.pointerEvents =
-                            "auto";
-
-                        doorScreen.classList.add(
-                            "open"
-                        );
-
-                    }
-
-                }, 500);
-
-
-                /* -----------------------------------------
-                   Selepas pintu selesai buka
-                   ----------------------------------------- */
-
-                setTimeout(() => {
-
-                    if (doorScreen) {
-
-                        doorScreen.style.display =
-                            "none";
-
-                        doorScreen.style.pointerEvents =
-                            "none";
-
-                    }
-
-
-                    reveal();
-
-                    startPetals();
-
-                }, 2600);
-
-
-                /* -----------------------------------------
-                   Muzik
-                   ----------------------------------------- */
-
-                if (audioPlayer) {
-
-                    audioPlayer.play()
-                        .catch(error => {
-
-                            console.log(
-                                "Audio memerlukan interaksi pengguna:",
-                                error
-                            );
-
-                        });
-
-                }
-
-            }
-        );
-
-    }
-
-
+            
     /* =====================================================
        PETALS
        ===================================================== */
