@@ -1,208 +1,247 @@
 /* =========================================================
-   WEDDING OPENING + DOUBLE DOOR OPENING ASAL
+   SIKIN & AZIMAN — WEDDING INVITATION
+   main.js
    ========================================================= */
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
 
-    const weddingOpening = document.querySelector(".wedding-opening");
-    const waxSeal = document.querySelector(".wax-seal");
-    const doorScreen = document.querySelector(".door-screen");
-    const card = document.querySelector(".card");
-    const audioPlayer = document.getElementById("audio-player");
-    const openingVideo = document.getElementById("openingVideo");
+    /* =====================================================
+       ELEMENTS
+       ===================================================== */
+
+    const weddingOpening =
+        document.getElementById("wedding-opening");
+
+    const waxSeal =
+        document.getElementById("open-invitation-btn");
+
+    const doorScreen =
+        document.getElementById("doorScreen");
+
+    const card =
+        document.getElementById("wedding-card");
+
+    const openingVideo =
+        document.getElementById("openingVideo");
+
+    const audioPlayer =
+        document.getElementById("audio-player");
+
+    const petalContainer =
+        document.querySelector(".petal-container");
+
+
+    /* =====================================================
+       SETTINGS
+       ===================================================== */
+
     const VIDEO_START = 0;
     const VIDEO_END = 12;
 
-/* =========================================================
-   OPENING VIDEO CONTROL
-   ========================================================= */
+    const MAX_PETALS = 45;
+    const PETAL_INTERVAL = 450;
 
-if (openingVideo) {
+    const WEDDING_DATE =
+        new Date("2026-12-19T11:00:00+08:00");
 
-    openingVideo.addEventListener(
-        "loadedmetadata",
-        function () {
 
-            /*
-             * Pastikan masa mula tidak melebihi
-             * panjang video.
-             */
+    /* =====================================================
+       INITIAL STATE
+       ===================================================== */
 
-            if (
-                VIDEO_START >= 0 &&
-                VIDEO_START < openingVideo.duration
-            ) {
+    if (card) {
+        card.style.display = "none";
+    }
 
-                openingVideo.currentTime =
-                    VIDEO_START;
-
-            }
-
-            openingVideo.play()
-                .catch(function (error) {
-
-                    console.log(
-                        "Video autoplay tidak dapat dimainkan:",
-                        error
-                    );
-
-                });
-
-        }
-    );
-
-
-    /*
-     * Check masa video.
-     */
-
-    openingVideo.addEventListener(
-        "timeupdate",
-        function () {
-
-            if (
-                VIDEO_END > VIDEO_START &&
-                openingVideo.currentTime >= VIDEO_END
-            ) {
-
-                openingVideo.currentTime =
-                    VIDEO_START;
-
-            }
-
-        }
-    );
-
-}
-
-    /* =========================================================
-       OPEN WEDDING INVITATION
-       ========================================================= */
-
-    if (waxSeal) {
-
-        waxSeal.addEventListener("click", function (event) {
-
-            event.preventDefault();
-            event.stopPropagation();
-
-
-            /* 1. Opening asal hilang */
-
-            if (weddingOpening) {
-
-                weddingOpening.classList.add(
-                    "opening-hide"
-                );
-
-            }
-
-
-            /* =====================================================
-               PAPARKAN CARD DI BELAKANG PINTU
-               ===================================================== */
-
-            if (card) {
-
-                card.style.display = "block";
-
-                window.scrollTo({
-                    top: 0,
-                    behavior: "instant"
-                });
-
-                reveal();
-
-            }
-
-
-            /* =====================================================
-               PAPARKAN PAGE UTAMA DI BELAKANG PINTU
-               ===================================================== */
-
-            if (card) {
-
-                card.style.display = "block";
-
-                window.scrollTo({
-                    top: 0,
-                    behavior: "instant"
-                });
-
-            }
-
-
-            /* =====================================================
-               BUKA DOUBLE DOOR
-               ===================================================== */
-
-            setTimeout(function () {
-
-                if (doorScreen) {
-
-                    doorScreen.style.pointerEvents = "auto";
-
-                    doorScreen.classList.add("open");
-
-                }
-
-            }, 650);
-
-
-            /* =====================================================
-               SELEPAS PINTU HABIS BUKA
-               ===================================================== */
-
-            setTimeout(function () {
-
-                if (doorScreen) {
-
-                    doorScreen.style.display = "none";
-
-                    doorScreen.style.pointerEvents = "none";
-
-                }
-
-                if (card) {
-
-                    reveal();
-
-                }
-
-                /* MULA PETAL SELEPAS PINTU BUKA */
-
-                startPetals();
-
-            }, 2900);
-
-
-            /* =====================================================
-               PLAY MUSIC
-               ===================================================== */
-
-            if (audioPlayer) {
-
-                audioPlayer
-                    .play()
-                    .catch(function (error) {
-
-                        console.log(
-                            "Audio belum boleh dimainkan:",
-                            error
-                        );
-
-                    });
-
-            }
-
-        });
-
+    if (doorScreen) {
+        doorScreen.style.pointerEvents = "none";
     }
 
 
-    /* =========================================================
+    /* =====================================================
+       OPENING VIDEO
+       ===================================================== */
+
+    if (openingVideo) {
+
+        /*
+         * Kita tidak perlukan HTML loop kerana
+         * JavaScript sendiri mengawal loop 0–12 saat.
+         */
+        openingVideo.removeAttribute("loop");
+
+
+        openingVideo.addEventListener(
+            "loadedmetadata",
+            () => {
+
+                if (
+                    VIDEO_START >= 0 &&
+                    VIDEO_START < openingVideo.duration
+                ) {
+                    openingVideo.currentTime =
+                        VIDEO_START;
+                }
+
+                openingVideo.play()
+                    .catch(error => {
+                        console.log(
+                            "Autoplay video tidak dibenarkan:",
+                            error
+                        );
+                    });
+            }
+        );
+
+
+        openingVideo.addEventListener(
+            "timeupdate",
+            () => {
+
+                if (
+                    VIDEO_END > VIDEO_START &&
+                    openingVideo.currentTime >= VIDEO_END
+                ) {
+                    openingVideo.currentTime =
+                        VIDEO_START;
+                }
+            }
+        );
+    }
+
+
+    /* =====================================================
+       OPEN INVITATION
+       ===================================================== */
+
+    let invitationOpened = false;
+
+    if (waxSeal) {
+
+        waxSeal.addEventListener(
+            "click",
+            event => {
+
+                event.preventDefault();
+                event.stopPropagation();
+
+                if (invitationOpened) {
+                    return;
+                }
+
+                invitationOpened = true;
+
+
+                /* -----------------------------------------
+                   Hentikan video
+                   ----------------------------------------- */
+
+                if (openingVideo) {
+
+                    openingVideo.pause();
+
+                }
+
+
+                /* -----------------------------------------
+                   Paparkan card
+                   ----------------------------------------- */
+
+                if (card) {
+
+                    card.style.display = "block";
+
+                    window.scrollTo({
+                        top: 0,
+                        behavior: "instant"
+                    });
+
+                }
+
+
+                /* -----------------------------------------
+                   Hilangkan opening
+                   ----------------------------------------- */
+
+                if (weddingOpening) {
+
+                    weddingOpening.classList.add(
+                        "opening-hide"
+                    );
+
+                }
+
+
+                /* -----------------------------------------
+                   Buka double door
+                   ----------------------------------------- */
+
+                setTimeout(() => {
+
+                    if (doorScreen) {
+
+                        doorScreen.style.pointerEvents =
+                            "auto";
+
+                        doorScreen.classList.add(
+                            "open"
+                        );
+
+                    }
+
+                }, 500);
+
+
+                /* -----------------------------------------
+                   Selepas pintu selesai buka
+                   ----------------------------------------- */
+
+                setTimeout(() => {
+
+                    if (doorScreen) {
+
+                        doorScreen.style.display =
+                            "none";
+
+                        doorScreen.style.pointerEvents =
+                            "none";
+
+                    }
+
+
+                    reveal();
+
+                    startPetals();
+
+                }, 2600);
+
+
+                /* -----------------------------------------
+                   Cuba mainkan muzik
+                   ----------------------------------------- */
+
+                if (audioPlayer) {
+
+                    audioPlayer.play()
+                        .catch(error => {
+
+                            console.log(
+                                "Audio memerlukan interaksi pengguna:",
+                                error
+                            );
+
+                        });
+
+                }
+
+            }
+        );
+    }
+
+
+    /* =====================================================
        PETALS
-       ========================================================= */
+       ===================================================== */
 
     let petalsStarted = false;
     let petalTimer = null;
@@ -210,18 +249,16 @@ if (openingVideo) {
 
     function createPetal() {
 
-        const container =
-            document.querySelector(".petal-container");
-
-
-        if (!container) {
-
-            console.warn(
-                "petal-container tidak dijumpai dalam HTML."
-            );
-
+        if (!petalContainer) {
             return;
+        }
 
+
+        if (
+            petalContainer.childElementCount >=
+            MAX_PETALS
+        ) {
+            return;
         }
 
 
@@ -232,7 +269,7 @@ if (openingVideo) {
         petal.className = "petal";
 
 
-        /* Kedudukan mula */
+        /* Posisi */
 
         petal.style.left =
             Math.random() * 100 + "vw";
@@ -244,8 +281,7 @@ if (openingVideo) {
         /* Saiz */
 
         const size =
-            5 + Math.random() * 10;
-
+            5 + Math.random() * 9;
 
         petal.style.width =
             size + "px";
@@ -260,50 +296,36 @@ if (openingVideo) {
             0.3 + Math.random() * 0.5;
 
 
-        /* Kelajuan */
+        /* Duration */
 
         const duration =
-            4 + Math.random() * 3;
-
+            5 + Math.random() * 4;
 
         petal.style.animationDuration =
             duration + "s";
 
 
-        petal.style.animationDelay =
-            "0s";
-
-
-        /* Gerakan kiri / kanan */
+        /* Gerakan */
 
         petal.style.setProperty(
             "--translate-x",
             (Math.random() * 300 - 150) + "px"
         );
 
-
         petal.style.setProperty(
             "--translate-y",
-            (300 + Math.random() * 200) + "px"
+            (350 + Math.random() * 250) + "px"
         );
 
 
-        /* Tambah petal */
+        petalContainer.appendChild(
+            petal
+        );
 
-        container.appendChild(petal);
 
+        setTimeout(() => {
 
-        /* Buang selepas selesai */
-
-        setTimeout(function () {
-
-            if (petal.parentNode) {
-
-                petal.parentNode.removeChild(
-                    petal
-                );
-
-            }
+            petal.remove();
 
         }, duration * 1000);
 
@@ -312,36 +334,22 @@ if (openingVideo) {
 
     function startPetals() {
 
-        if (petalsStarted) {
-
+        if (
+            petalsStarted ||
+            !petalContainer
+        ) {
             return;
-
         }
 
 
         petalsStarted = true;
 
 
-        const container =
-            document.querySelector(".petal-container");
+        /* Petal awal */
 
+        for (let i = 0; i < 12; i++) {
 
-        if (!container) {
-
-            console.warn(
-                "petal-container tidak dijumpai."
-            );
-
-            return;
-
-        }
-
-
-        /* Petal pertama */
-
-        for (let i = 0; i < 15; i++) {
-
-            setTimeout(function () {
+            setTimeout(() => {
 
                 createPetal();
 
@@ -350,140 +358,123 @@ if (openingVideo) {
         }
 
 
-        /* Petal seterusnya */
+        /* Petal berterusan */
 
-        petalTimer = setInterval(function () {
-
-            createPetal();
-
-        }, 350);
+        petalTimer =
+            setInterval(
+                createPetal,
+                PETAL_INTERVAL
+            );
 
     }
 
 
-    /* =========================================================
+    /* =====================================================
        COUNTDOWN
-       SIKIN & AZIMAN
-       19 DISEMBER 2026
-       11:00 PAGI
-       MALAYSIA UTC+8
-       ========================================================= */
+       ===================================================== */
 
     function setupCountdown() {
 
-        const weddingDate =
-            new Date(
-                "2026-12-19T11:00:00+08:00"
-            ).getTime();
+        const dayElement =
+            document.querySelector(
+                ".campaign-0 .day"
+            );
+
+        const hourElement =
+            document.querySelector(
+                ".campaign-0 .hour"
+            );
+
+        const minuteElement =
+            document.querySelector(
+                ".campaign-0 .minute"
+            );
+
+        const secondElement =
+            document.querySelector(
+                ".campaign-0 .second"
+            );
 
 
-        const second = 1000;
-        const minute = second * 60;
-        const hour = minute * 60;
-        const day = hour * 24;
-
-
-        function countdown() {
+        function updateCountdown() {
 
             const now =
-                new Date().getTime();
-
+                new Date();
 
             let gap =
-                weddingDate - now;
+                WEDDING_DATE.getTime() -
+                now.getTime();
 
 
             if (gap < 0) {
-
                 gap = 0;
-
             }
 
 
-            const textDay =
-                Math.floor(gap / day);
-
-
-            const textHour =
+            const day =
                 Math.floor(
-                    (gap % day) / hour
+                    gap /
+                    (1000 * 60 * 60 * 24)
                 );
 
 
-            const textMinute =
+            const hour =
                 Math.floor(
-                    (gap % hour) / minute
+                    (
+                        gap %
+                        (1000 * 60 * 60 * 24)
+                    ) /
+                    (1000 * 60 * 60)
                 );
 
 
-            const textSecond =
+            const minute =
                 Math.floor(
-                    (gap % minute) / second
+                    (
+                        gap %
+                        (1000 * 60 * 60)
+                    ) /
+                    (1000 * 60)
                 );
 
 
-            const dayElement =
-                document.querySelector(
-                    ".campaign-0 .day"
-                );
-
-
-            const hourElement =
-                document.querySelector(
-                    ".campaign-0 .hour"
-                );
-
-
-            const minuteElement =
-                document.querySelector(
-                    ".campaign-0 .minute"
-                );
-
-
-            const secondElement =
-                document.querySelector(
-                    ".campaign-0 .second"
+            const second =
+                Math.floor(
+                    (
+                        gap %
+                        (1000 * 60)
+                    ) /
+                    1000
                 );
 
 
             if (dayElement) {
-
                 dayElement.textContent =
-                    textDay;
-
+                    day;
             }
-
 
             if (hourElement) {
-
                 hourElement.textContent =
-                    textHour;
-
+                    String(hour).padStart(2, "0");
             }
-
 
             if (minuteElement) {
-
                 minuteElement.textContent =
-                    textMinute;
-
+                    String(minute).padStart(2, "0");
             }
 
-
             if (secondElement) {
-
                 secondElement.textContent =
-                    textSecond;
-
+                    String(second).padStart(2, "0");
             }
 
         }
 
 
-        countdown();
+        updateCountdown();
 
         setInterval(
-            countdown,
+            updateCountdown,
             1000
         );
 
@@ -493,9 +484,9 @@ if (openingVideo) {
     setupCountdown();
 
 
-    /* =========================================================
-       CALENDAR
-       ========================================================= */
+    /* =====================================================
+       CALENDAR DATA
+       ===================================================== */
 
     const weddingEvent = {
 
@@ -517,11 +508,11 @@ if (openingVideo) {
     };
 
 
-    /* =========================================================
+    /* =====================================================
        GOOGLE CALENDAR
-       ========================================================= */
+       ===================================================== */
 
-    function generateGoogleCalendarLink(eventData) {
+    function addGoogleCalendar() {
 
         const baseUrl =
             "https://calendar.google.com/calendar/render?action=TEMPLATE";
@@ -530,54 +521,41 @@ if (openingVideo) {
         const params =
             new URLSearchParams({
 
-                text: eventData.title,
+                text:
+                    weddingEvent.title,
 
                 dates:
-                    eventData.startDate +
+                    weddingEvent.startDate +
                     "/" +
-                    eventData.endDate,
+                    weddingEvent.endDate,
 
                 details:
-                    eventData.description,
+                    weddingEvent.description,
 
                 location:
-                    eventData.location
+                    weddingEvent.location
 
             });
 
 
-        return (
+        window.open(
             baseUrl +
             "&" +
-            params.toString()
+            params.toString(),
+            "_blank",
+            "noopener,noreferrer"
         );
 
     }
 
 
-    function addGoogleCalendar() {
-
-        const googleLink =
-            generateGoogleCalendarLink(
-                weddingEvent
-            );
-
-
-        window.open(
-            googleLink,
-            "_blank"
-        );
-
-    }
-
-
-    /* =========================================================
+    /* =====================================================
        APPLE CALENDAR / ICS
-       ========================================================= */
+       ===================================================== */
 
     function escapeICSText(text) {
 
-        return text
+        return String(text)
             .replace(/\\/g, "\\\\")
             .replace(/\n/g, "\\n")
             .replace(/,/g, "\\,")
@@ -586,54 +564,60 @@ if (openingVideo) {
     }
 
 
-    function generateICS(eventData) {
+    function getICSDate(date) {
 
-        const title =
-            escapeICSText(
-                eventData.title
-            );
+        return date
+            .toISOString()
+            .replace(/[-:]/g, "")
+            .replace(/\.\d{3}/, "");
 
-
-        const location =
-            escapeICSText(
-                eventData.location
-            );
+    }
 
 
-        const description =
-            escapeICSText(
-                eventData.description
-            );
+    function generateICS() {
+
+        const now =
+            getICSDate(new Date());
 
 
         return [
 
             "BEGIN:VCALENDAR",
             "VERSION:2.0",
-            "PRODID:-//Sikin & Aziman//Wedding//EN",
+            "PRODID:-//Sikin & Aziman//Wedding//MS",
             "CALSCALE:GREGORIAN",
+            "METHOD:PUBLISH",
+
             "BEGIN:VEVENT",
 
-            "UID:sikin-aziman-2026@wedding",
+            "UID:sikin-aziman-wedding-2026@example.com",
 
-            "DTSTAMP:20260913T000000Z",
+            "DTSTAMP:" +
+            now,
 
             "DTSTART:" +
-            eventData.startDate,
+            weddingEvent.startDate,
 
             "DTEND:" +
-            eventData.endDate,
+            weddingEvent.endDate,
 
             "SUMMARY:" +
-            title,
+            escapeICSText(
+                weddingEvent.title
+            ),
 
             "LOCATION:" +
-            location,
+            escapeICSText(
+                weddingEvent.location
+            ),
 
             "DESCRIPTION:" +
-            description,
+            escapeICSText(
+                weddingEvent.description
+            ),
 
             "END:VEVENT",
+
             "END:VCALENDAR"
 
         ].join("\r\n");
@@ -641,14 +625,11 @@ if (openingVideo) {
     }
 
 
-    function downloadICS(
-        filename,
-        content
-    ) {
+    function addAppleCalendar() {
 
         const blob =
             new Blob(
-                [content],
+                [generateICS()],
                 {
                     type:
                         "text/calendar;charset=utf-8"
@@ -657,9 +638,7 @@ if (openingVideo) {
 
 
         const url =
-            URL.createObjectURL(
-                blob
-            );
+            URL.createObjectURL(blob);
 
 
         const link =
@@ -669,95 +648,82 @@ if (openingVideo) {
         link.href = url;
 
         link.download =
-            filename;
+            "Majlis-Perkahwinan-Sikin-Aziman.ics";
 
 
-        document.body.appendChild(
-            link
-        );
-
+        document.body.appendChild(link);
 
         link.click();
 
-
-        document.body.removeChild(
-            link
-        );
+        link.remove();
 
 
-        setTimeout(function () {
+        setTimeout(() => {
 
-            URL.revokeObjectURL(
-                url
-            );
+            URL.revokeObjectURL(url);
 
         }, 1000);
 
     }
 
 
-    function addAppleCalendar() {
-
-        const icsContent =
-            generateICS(
-                weddingEvent
-            );
-
-
-        downloadICS(
-            "Majlis-Perkahwinan-Sikin-Aziman.ics",
-            icsContent
-        );
-
-    }
-
-
-    /* =========================================================
+    /* =====================================================
        GOOGLE MAPS
-       ========================================================= */
+       ===================================================== */
 
     function openGoogleMaps() {
 
-        const latitude = 2.3807618;
-        const longitude = 103.7116231;
+        const address =
+            "No 66 Blok 5B Jalan Merak, Felda Nitar 01, 86800 Mersing, Johor, Malaysia";
+
+
+        const url =
+            "https://www.google.com/maps/dir/?api=1&destination=" +
+            encodeURIComponent(address);
 
 
         window.open(
-            "https://www.google.com/maps/dir/?api=1&destination=" +
-            latitude +
-            "," +
-            longitude,
-            "_blank"
+            url,
+            "_blank",
+            "noopener,noreferrer"
         );
 
     }
 
 
-    /* =========================================================
+    /* =====================================================
        WAZE
-       ========================================================= */
+       ===================================================== */
 
     function openWaze() {
 
-        const latitude = 2.3807618;
-        const longitude = 103.7116231;
+        const latitude =
+            2.3807618;
+
+        const longitude =
+            103.7116231;
 
 
-        window.open(
+        const url =
             "https://www.waze.com/ul?ll=" +
             latitude +
             "%2C" +
             longitude +
-            "&navigate=yes",
-            "_blank"
+            "&navigate=yes";
+
+
+        window.open(
+            url,
+            "_blank",
+            "noopener,noreferrer"
         );
 
     }
 
 
-    /* =========================================================
+    /* =====================================================
        WHATSAPP
-       ========================================================= */
+       ===================================================== */
 
     function openWhatsApp(phoneNumber) {
 
@@ -767,29 +733,48 @@ if (openingVideo) {
 
         const cleanPhone =
             String(phoneNumber)
-                .replace(/\+/g, "")
-                .replace(/\s/g, "")
-                .replace(/-/g, "");
+                .replace(/\D/g, "");
 
 
-        const whatsappUrl =
+        /*
+         * Jika nombor Malaysia bermula dengan 0,
+         * tukarkan kepada +60.
+         */
+
+        let whatsappPhone =
+            cleanPhone;
+
+
+        if (
+            whatsappPhone.startsWith("0")
+        ) {
+
+            whatsappPhone =
+                "60" +
+                whatsappPhone.substring(1);
+
+        }
+
+
+        const url =
             "https://wa.me/" +
-            cleanPhone +
+            whatsappPhone +
             "?text=" +
             encodeURIComponent(message);
 
 
         window.open(
-            whatsappUrl,
-            "_blank"
+            url,
+            "_blank",
+            "noopener,noreferrer"
         );
 
     }
 
 
-    /* =========================================================
+    /* =====================================================
        PHONE
-       ========================================================= */
+       ===================================================== */
 
     function makePhoneCall(phoneNumber) {
 
@@ -800,165 +785,64 @@ if (openingVideo) {
     }
 
 
-    /* =========================================================
-       REVEAL
-       ========================================================= */
+    /* =====================================================
+       REVEAL ON SCROLL
+       ===================================================== */
 
     function reveal() {
 
         const reveals =
-            document.querySelectorAll(".reveal");
+            document.querySelectorAll(
+                ".reveal"
+            );
 
 
-        for (
-            let i = 0;
-            i < reveals.length;
-            i++
-        ) {
-
-            const windowHeight =
-                window.innerHeight;
+        const windowHeight =
+            window.innerHeight;
 
 
-            const elementTop =
-                reveals[i]
-                    .getBoundingClientRect()
-                    .top;
+        reveals.forEach(
+            element => {
+
+                const elementTop =
+                    element.getBoundingClientRect()
+                        .top;
 
 
-            const elementVisible = 10;
+                if (
+                    elementTop <
+                    windowHeight - 50
+                ) {
 
+                    element.classList.add(
+                        "active"
+                    );
 
-            if (
-                elementTop <
-                windowHeight -
-                elementVisible
-            ) {
-
-                reveals[i]
-                    .classList
-                    .add("active");
+                }
 
             }
-
-        }
+        );
 
     }
 
 
     window.addEventListener(
         "scroll",
-        reveal
+        reveal,
+        {
+            passive: true
+        }
     );
 
 
     reveal();
 
 
-    /* =========================================================
-       PETALS
-       ========================================================= */
+    /* =====================================================
+       MENU SYSTEM
+       ===================================================== */
 
-    const petalContainer =
-        document.querySelector(
-            ".petal-container"
-        );
-
-
-    const maxPetals = 70;
-    const petalInterval = 100;
-
-
-    function createPetalOriginal() {
-
-        if (
-            !petalContainer ||
-            petalContainer.childElementCount >= maxPetals
-        ) {
-
-            return;
-
-        }
-
-
-        const petal =
-            document.createElement("div");
-
-
-        petal.className = "petal";
-
-
-        petal.style.top =
-            Math.random() * 100 + "%";
-
-
-        const duration =
-            4 + Math.random() * 2;
-
-
-        const petalSize =
-            5 + Math.random() * 10;
-
-
-        petal.style.width =
-            petalSize + "px";
-
-
-        petal.style.height =
-            petalSize + "px";
-
-
-        petal.style.opacity =
-            0.3 + Math.random() * 0.5;
-
-
-        petal.style.animationDuration =
-            duration + "s";
-
-
-        petal.style.setProperty(
-            "--translate-x",
-            300 + Math.random() * 120 + "px"
-        );
-
-
-        petal.style.setProperty(
-            "--translate-y",
-            300 + Math.random() * 120 + "px"
-        );
-
-
-        petalContainer.appendChild(
-            petal
-        );
-
-
-        setTimeout(function () {
-
-            if (petal.parentNode) {
-
-                petal.parentNode.removeChild(
-                    petal
-                );
-
-            }
-
-        }, duration * 1000);
-
-    }
-
-
-    setInterval(
-        createPetalOriginal,
-        petalInterval
-    );
-
-
-    /* =========================================================
-       TOGGLE MENU
-       ========================================================= */
-
-    const toggleButtons = {
+    const menuMap = {
 
         "calendar-btn":
             "calendar-menu",
@@ -972,49 +856,35 @@ if (openingVideo) {
         "rsvp-btn":
             "rsvp-menu",
 
-        "ucapan-btn":
-            "ucapan-menu",
-
         "contact-btn":
             "contact-menu",
 
-        "kehadiran-btn":
-            "rsvp-menu",
+        "ucapan-btn":
+            "ucapan-menu",
 
-        "btn-hadir":
-            "success-menu"
+        "kehadiran-btn":
+            "rsvp-menu"
 
     };
 
 
+    function getMenus() {
+
+        return document.querySelectorAll(
+            ".toggle-menu"
+        );
+
+    }
+
+
     function closeAllMenus() {
 
-        const menuIds =
-            [
-                ...new Set(
-                    Object.values(
-                        toggleButtons
-                    )
-                )
-            ];
+        getMenus().forEach(
+            menu => {
 
-
-        menuIds.forEach(
-            function (menuId) {
-
-                const menu =
-                    document.getElementById(
-                        menuId
-                    );
-
-
-                if (menu) {
-
-                    menu.classList.remove(
-                        "open"
-                    );
-
-                }
+                menu.classList.remove(
+                    "open"
+                );
 
             }
         );
@@ -1022,17 +892,7 @@ if (openingVideo) {
     }
 
 
-    function toggleMenu(
-        menuId,
-        clickEvent
-    ) {
-
-        if (clickEvent) {
-
-            clickEvent.stopPropagation();
-
-        }
-
+    function openMenu(menuId) {
 
         const menu =
             document.getElementById(
@@ -1041,69 +901,96 @@ if (openingVideo) {
 
 
         if (!menu) {
-
             return;
-
         }
-
-
-        const isOpen =
-            menu.classList.contains(
-                "open"
-            );
 
 
         closeAllMenus();
 
-
-        if (!isOpen) {
-
-            menu.classList.add(
-                "open"
-            );
-
-        }
+        menu.classList.add(
+            "open"
+        );
 
     }
 
 
-    Object.entries(
-        toggleButtons
-    ).forEach(
-        function ([buttonId, menuId]) {
+    Object.entries(menuMap)
+        .forEach(
+            ([buttonId, menuId]) => {
 
-            const button =
-                document.getElementById(
-                    buttonId
-                );
-
-
-            if (!button) {
-
-                return;
-
-            }
-
-
-            button.addEventListener(
-                "click",
-                function (event) {
-
-                    toggleMenu(
-                        menuId,
-                        event
+                const button =
+                    document.getElementById(
+                        buttonId
                     );
 
+
+                if (!button) {
+                    return;
                 }
-            );
 
-        }
-    );
 
+                button.addEventListener(
+                    "click",
+                    event => {
+
+                        event.preventDefault();
+                        event.stopPropagation();
+
+                        const menu =
+                            document.getElementById(
+                                menuId
+                            );
+
+
+                        if (
+                            menu &&
+                            menu.classList.contains(
+                                "open"
+                            )
+                        ) {
+
+                            menu.classList.remove(
+                                "open"
+                            );
+
+                        } else {
+
+                            openMenu(
+                                menuId
+                            );
+
+                        }
+
+                    }
+                );
+
+            }
+        );
+
+
+    /* Klik luar menu */
 
     document.addEventListener(
         "click",
-        function () {
+        event => {
+
+            if (
+                event.target.closest(
+                    ".toggle-menu"
+                )
+            ) {
+                return;
+            }
+
+
+            if (
+                event.target.closest(
+                    ".menu"
+                )
+            ) {
+                return;
+            }
+
 
             closeAllMenus();
 
@@ -1111,247 +998,50 @@ if (openingVideo) {
     );
 
 
+    /* Stop propagation dalam menu */
+
+    getMenus().forEach(
+        menu => {
+
+            menu.addEventListener(
+                "click",
+                event => {
+
+                    event.stopPropagation();
+
+                }
+            );
+
+        }
+    );
+
+
+    /* =====================================================
+       CLOSE BUTTONS
+       ===================================================== */
+
     document
-        .querySelectorAll(".toggle-menu")
+        .querySelectorAll(
+            "[data-close]"
+        )
         .forEach(
-            function (menu) {
+            button => {
 
-                menu.addEventListener(
+                button.addEventListener(
                     "click",
-                    function (event) {
+                    event => {
 
+                        event.preventDefault();
                         event.stopPropagation();
 
-                    }
-                );
 
-            }
-        );
+                        const menuId =
+                            button.dataset.close;
 
-
-/* =========================================================
-   CLOSE / TUTUP SEMUA MENU
-   ========================================================= */
-
-document
-    .querySelectorAll(".toggle-menu .tutup")
-    .forEach(function (closeButton) {
-
-        closeButton.addEventListener(
-            "click",
-            function (event) {
-
-                event.preventDefault();
-                event.stopPropagation();
-
-                const menu =
-                    closeButton.closest(
-                        ".toggle-menu"
-                    );
-
-                if (menu) {
-
-                    menu.classList.remove(
-                        "open"
-                    );
-
-                }
-
-            }
-        );
-
-    });
-
-
-
-    /* =========================================================
-       FORM UCAPAN
-       ========================================================= */
-
-    const ucapanForm =
-        document.getElementById(
-            "form-ucapan"
-        );
-
-
-    if (ucapanForm) {
-
-        ucapanForm.addEventListener(
-            "submit",
-            function (event) {
-
-                event.preventDefault();
-
-
-                const formData =
-                    new FormData(
-                        ucapanForm
-                    );
-
-
-                fetch(
-                    ucapanForm.action,
-                    {
-                        method: "POST",
-                        body: formData
-                    }
-                )
-
-                .then(
-                    function (response) {
-
-                        if (!response.ok) {
-
-                            throw new Error(
-                                "Form submission failed"
-                            );
-
-                        }
-
-
-                        return response.text();
-
-                    }
-                )
-
-                .then(
-                    function () {
-
-                        const successMenu =
-                            document.getElementById(
-                                "success-menu"
-                            );
-
-
-                        if (successMenu) {
-
-                            successMenu.innerHTML =
-                                "<div class='success-box'>" +
-                                "<i class='bx bx-check-circle'></i>" +
-                                "<h2>Terima Kasih</h2>" +
-                                "<p>Mesej anda berjaya dihantar!</p>" +
-                                "</div>";
-
-
-                            closeAllMenus();
-
-
-                            successMenu.classList.add(
-                                "open"
-                            );
-
-                        }
-
-
-                        ucapanForm.reset();
-
-                    }
-                )
-
-                .catch(
-                    function (error) {
-
-                        console.error(
-                            error
-                        );
-
-
-                        alert(
-                            "Maaf, mesej tidak dapat dihantar."
-                        );
-
-                    }
-                );
-
-            }
-        );
-
-    }
-
-
-    /* =========================================================
-       KEHADIRAN
-       ========================================================= */
-
-    function incrementCount(
-        endpoint,
-        successMessage,
-        iconClass,
-        closeMenuId
-    ) {
-
-        fetch(
-            endpoint,
-            {
-                method: "POST",
-
-                headers: {
-                    "Content-Type":
-                        "application/x-www-form-urlencoded"
-                },
-
-                body:
-                    "action=increment"
-            }
-        )
-
-        .then(
-            function (response) {
-
-                if (!response.ok) {
-
-                    throw new Error(
-                        "Request failed"
-                    );
-
-                }
-
-
-                return response.json();
-
-            }
-        )
-
-        .then(
-            function (data) {
-
-                if (data.attend) {
-
-                    const successMenu =
-                        document.getElementById(
-                            "success-menu"
-                        );
-
-
-                    if (successMenu) {
-
-                        successMenu.innerHTML =
-                            "<div class='success-box'>" +
-                            "<i class='" +
-                            iconClass +
-                            "'></i>" +
-                            "<h2>Terima Kasih</h2>" +
-                            "<p>" +
-                            successMessage +
-                            "</p>" +
-                            "</div>";
-
-
-                        closeAllMenus();
-
-
-                        successMenu.classList.add(
-                            "open"
-                        );
-
-                    }
-
-
-                    if (closeMenuId) {
 
                         const menu =
                             document.getElementById(
-                                closeMenuId
+                                menuId
                             );
 
 
@@ -1364,38 +1054,107 @@ document
                         }
 
                     }
+                );
 
-                } else {
+            }
+        );
 
-                    console.error(
-                        data.error
+
+    /* =====================================================
+       FORM UCAPAN
+       ===================================================== */
+
+    const ucapanForm =
+        document.getElementById(
+            "form-ucapan"
+        );
+
+
+    if (ucapanForm) {
+
+        ucapanForm.addEventListener(
+            "submit",
+            async event => {
+
+                event.preventDefault();
+
+
+                const submitButton =
+                    ucapanForm.querySelector(
+                        ".hantar"
                     );
 
 
-                    alert(
-                        "Terjadi kesilapan: " +
-                        (
-                            data.error ||
-                            "Tidak diketahui"
-                        )
+                if (submitButton) {
+
+                    submitButton.disabled =
+                        true;
+
+                }
+
+
+                try {
+
+                    const formData =
+                        new FormData(
+                            ucapanForm
+                        );
+
+
+                    const response =
+                        await fetch(
+                            ucapanForm.action,
+                            {
+                                method:
+                                    "POST",
+
+                                body:
+                                    formData
+                            }
+                        );
+
+
+                    if (!response.ok) {
+
+                        throw new Error(
+                            "Gagal menghantar ucapan."
+                        );
+
+                    }
+
+
+                    ucapanForm.reset();
+
+                    showSuccess(
+                        "Mesej anda berjaya dihantar!",
+                        "bx bx-check-circle"
                     );
 
                 }
 
-            }
-        )
+                catch (error) {
 
-        .catch(
-            function (error) {
-
-                console.error(
-                    error
-                );
+                    console.error(
+                        error
+                    );
 
 
-                alert(
-                    "Error processing the request."
-                );
+                    alert(
+                        "Maaf, mesej tidak dapat dihantar. Sila cuba lagi."
+                    );
+
+                }
+
+                finally {
+
+                    if (submitButton) {
+
+                        submitButton.disabled =
+                            false;
+
+                    }
+
+                }
 
             }
         );
@@ -1403,9 +1162,155 @@ document
     }
 
 
-    /* =========================================================
-       HADIR
-       ========================================================= */
+    /* =====================================================
+       SUCCESS MENU
+       ===================================================== */
+
+    function showSuccess(
+        message,
+        icon = "bx bx-check-circle"
+    ) {
+
+        const successMenu =
+            document.getElementById(
+                "success-menu"
+            );
+
+
+        if (!successMenu) {
+            return;
+        }
+
+
+        const successBox =
+            successMenu.querySelector(
+                ".success-box"
+            );
+
+
+        if (!successBox) {
+            return;
+        }
+
+
+        const iconElement =
+            successBox.querySelector(
+                "i"
+            );
+
+
+        const messageElement =
+            successBox.querySelector(
+                "p"
+            );
+
+
+        if (iconElement) {
+
+            iconElement.className =
+                icon;
+
+        }
+
+
+        if (messageElement) {
+
+            messageElement.textContent =
+                message;
+
+        }
+
+
+        closeAllMenus();
+
+
+        successMenu.classList.add(
+            "open"
+        );
+
+    }
+
+
+    /* =====================================================
+       RSVP
+       ===================================================== */
+
+    async function submitAttendance(
+        endpoint,
+        successMessage,
+        icon
+    ) {
+
+        try {
+
+            const response =
+                await fetch(
+                    endpoint,
+                    {
+                        method:
+                            "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/x-www-form-urlencoded"
+                        },
+
+                        body:
+                            "action=increment"
+                    }
+                );
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Server error"
+                );
+
+            }
+
+
+            const data =
+                await response.json();
+
+
+            if (
+                data &&
+                data.attend
+            ) {
+
+                showSuccess(
+                    successMessage,
+                    icon
+                );
+
+                return;
+
+            }
+
+
+            throw new Error(
+                data?.error ||
+                "Respons tidak sah."
+            );
+
+        }
+
+        catch (error) {
+
+            console.error(
+                error
+            );
+
+
+            alert(
+                "Maaf, terdapat masalah ketika menghantar kehadiran. Sila cuba lagi."
+            );
+
+        }
+
+    }
+
 
     const btnHadir =
         document.getElementById(
@@ -1417,16 +1322,16 @@ document
 
         btnHadir.addEventListener(
             "click",
-            function (event) {
+            event => {
 
+                event.preventDefault();
                 event.stopPropagation();
 
 
-                incrementCount(
+                submitAttendance(
                     "count_hadir.php",
                     "Kami menantikan kedatangan anda!",
-                    "bx bxs-wink-smile",
-                    "rsvp-menu"
+                    "bx bxs-wink-smile"
                 );
 
             }
@@ -1434,10 +1339,6 @@ document
 
     }
 
-
-    /* =========================================================
-       TIDAK HADIR
-       ========================================================= */
 
     const btnTidakHadir =
         document.getElementById(
@@ -1449,16 +1350,16 @@ document
 
         btnTidakHadir.addEventListener(
             "click",
-            function (event) {
+            event => {
 
+                event.preventDefault();
                 event.stopPropagation();
 
 
-                incrementCount(
+                submitAttendance(
                     "count_tidak_hadir.php",
-                    "Maaf, mungkin lain kali.",
-                    "bx bxs-sad",
-                    "rsvp-menu"
+                    "Terima kasih kerana memaklumkan kepada kami.",
+                    "bx bxs-sad"
                 );
 
             }
@@ -1467,9 +1368,53 @@ document
     }
 
 
-    /* =========================================================
-       EXPOSE FUNCTIONS
-       ========================================================= */
+    /* =====================================================
+       MUSIC
+       ===================================================== */
+
+    const musicButton =
+        document.getElementById(
+            "music-btn"
+        );
+
+
+    if (musicButton && audioPlayer) {
+
+        audioPlayer.addEventListener(
+            "play",
+            () => {
+
+                musicButton
+                    .querySelector("i")
+                    ?.classList.replace(
+                        "bx-music",
+                        "bx-volume-full"
+                    );
+
+            }
+        );
+
+
+        audioPlayer.addEventListener(
+            "pause",
+            () => {
+
+                musicButton
+                    .querySelector("i")
+                    ?.classList.replace(
+                        "bx-volume-full",
+                        "bx-music"
+                    );
+
+            }
+        );
+
+    }
+
+
+    /* =====================================================
+       EXPOSE GLOBAL FUNCTIONS
+       ===================================================== */
 
     window.addGoogleCalendar =
         addGoogleCalendar;
