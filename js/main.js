@@ -1,51 +1,299 @@
 /* =========================================================
-   WRAPPER OVERLAY
+   WEDDING OPENING + DOUBLE DOOR OPENING ASAL
    ========================================================= */
 
 document.addEventListener("DOMContentLoaded", function () {
 
-    const toggleContent = document.getElementById("toggle-content");
-    const wrapper = document.querySelector(".wrapper");
+    const weddingOpening = document.querySelector(".wedding-opening");
+    const waxSeal = document.querySelector(".wax-seal");
+    const doorScreen = document.querySelector(".door-screen");
     const card = document.querySelector(".card");
     const audioPlayer = document.getElementById("audio-player");
 
-    if (toggleContent) {
-        toggleContent.addEventListener("click", function () {
 
-            if (wrapper) {
-                wrapper.classList.add("hidden");
+    /* =========================================================
+       OPEN WEDDING INVITATION
+       ========================================================= */
 
-                wrapper.addEventListener(
-                    "transitionend",
-                    function () {
-                        wrapper.style.display = "none";
+    if (waxSeal) {
 
-                        if (card) {
-                            card.style.display = "block";
-                        }
-                    },
-                    { once: true }
+        waxSeal.addEventListener("click", function (event) {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+
+            /* 1. Opening asal hilang */
+
+            if (weddingOpening) {
+
+                weddingOpening.classList.add(
+                    "opening-hide"
                 );
 
-                /* Fallback jika transition CSS tidak berjalan */
-                setTimeout(function () {
-                    wrapper.style.display = "none";
+            }
 
-                    if (card) {
-                        card.style.display = "block";
-                    }
-                }, 1000);
-            } else if (card) {
+
+            /* =====================================================
+               PAPARKAN CARD DI BELAKANG PINTU
+               ===================================================== */
+
+            if (card) {
+
                 card.style.display = "block";
+
+                window.scrollTo({
+                    top: 0,
+                    behavior: "instant"
+                });
+
+                reveal();
+
             }
 
-            /* Play music */
-            if (audioPlayer) {
-                audioPlayer.play().catch(function (error) {
-                    console.log("Audio belum boleh dimainkan:", error);
+
+            /* =====================================================
+               PAPARKAN PAGE UTAMA DI BELAKANG PINTU
+               ===================================================== */
+
+            if (card) {
+
+                card.style.display = "block";
+
+                window.scrollTo({
+                    top: 0,
+                    behavior: "instant"
                 });
+
             }
+
+
+            /* =====================================================
+               BUKA DOUBLE DOOR
+               ===================================================== */
+
+            setTimeout(function () {
+
+                if (doorScreen) {
+
+                    doorScreen.style.pointerEvents = "auto";
+
+                    doorScreen.classList.add("open");
+
+                }
+
+            }, 650);
+
+
+            /* =====================================================
+               SELEPAS PINTU HABIS BUKA
+               ===================================================== */
+
+            setTimeout(function () {
+
+                if (doorScreen) {
+
+                    doorScreen.style.display = "none";
+
+                    doorScreen.style.pointerEvents = "none";
+
+                }
+
+                if (card) {
+
+                    reveal();
+
+                }
+
+                /* MULA PETAL SELEPAS PINTU BUKA */
+
+                startPetals();
+
+            }, 2900);
+
+
+            /* =====================================================
+               PLAY MUSIC
+               ===================================================== */
+
+            if (audioPlayer) {
+
+                audioPlayer
+                    .play()
+                    .catch(function (error) {
+
+                        console.log(
+                            "Audio belum boleh dimainkan:",
+                            error
+                        );
+
+                    });
+
+            }
+
         });
+
+    }
+
+
+    /* =========================================================
+       PETALS
+       ========================================================= */
+
+    let petalsStarted = false;
+    let petalTimer = null;
+
+
+    function createPetal() {
+
+        const container =
+            document.querySelector(".petal-container");
+
+
+        if (!container) {
+
+            console.warn(
+                "petal-container tidak dijumpai dalam HTML."
+            );
+
+            return;
+
+        }
+
+
+        const petal =
+            document.createElement("div");
+
+
+        petal.className = "petal";
+
+
+        /* Kedudukan mula */
+
+        petal.style.left =
+            Math.random() * 100 + "vw";
+
+        petal.style.top =
+            "-20px";
+
+
+        /* Saiz */
+
+        const size =
+            5 + Math.random() * 10;
+
+
+        petal.style.width =
+            size + "px";
+
+        petal.style.height =
+            size + "px";
+
+
+        /* Opacity */
+
+        petal.style.opacity =
+            0.3 + Math.random() * 0.5;
+
+
+        /* Kelajuan */
+
+        const duration =
+            4 + Math.random() * 3;
+
+
+        petal.style.animationDuration =
+            duration + "s";
+
+
+        petal.style.animationDelay =
+            "0s";
+
+
+        /* Gerakan kiri / kanan */
+
+        petal.style.setProperty(
+            "--translate-x",
+            (Math.random() * 300 - 150) + "px"
+        );
+
+
+        petal.style.setProperty(
+            "--translate-y",
+            (300 + Math.random() * 200) + "px"
+        );
+
+
+        /* Tambah petal */
+
+        container.appendChild(petal);
+
+
+        /* Buang selepas selesai */
+
+        setTimeout(function () {
+
+            if (petal.parentNode) {
+
+                petal.parentNode.removeChild(
+                    petal
+                );
+
+            }
+
+        }, duration * 1000);
+
+    }
+
+
+    function startPetals() {
+
+        if (petalsStarted) {
+
+            return;
+
+        }
+
+
+        petalsStarted = true;
+
+
+        const container =
+            document.querySelector(".petal-container");
+
+
+        if (!container) {
+
+            console.warn(
+                "petal-container tidak dijumpai."
+            );
+
+            return;
+
+        }
+
+
+        /* Petal pertama */
+
+        for (let i = 0; i < 15; i++) {
+
+            setTimeout(function () {
+
+                createPetal();
+
+            }, i * 180);
+
+        }
+
+
+        /* Petal seterusnya */
+
+        petalTimer = setInterval(function () {
+
+            createPetal();
+
+        }, 350);
+
     }
 
 
@@ -54,71 +302,129 @@ document.addEventListener("DOMContentLoaded", function () {
        SIKIN & AZIMAN
        19 DISEMBER 2026
        11:00 PAGI
-       WAKTU MALAYSIA UTC+8
+       MALAYSIA UTC+8
        ========================================================= */
 
     function setupCountdown() {
 
-        const weddingDate = new Date(
-            "2026-12-19T11:00:00+08:00"
-        ).getTime();
+        const weddingDate =
+            new Date(
+                "2026-12-19T11:00:00+08:00"
+            ).getTime();
+
 
         const second = 1000;
         const minute = second * 60;
         const hour = minute * 60;
         const day = hour * 24;
 
+
         function countdown() {
 
-            const now = new Date().getTime();
+            const now =
+                new Date().getTime();
 
-            let gap = weddingDate - now;
 
-            /* Jika majlis sudah bermula */
+            let gap =
+                weddingDate - now;
+
+
             if (gap < 0) {
+
                 gap = 0;
+
             }
 
-            const textDay = Math.floor(gap / day);
-            const textHour = Math.floor((gap % day) / hour);
-            const textMinute = Math.floor((gap % hour) / minute);
-            const textSecond = Math.floor((gap % minute) / second);
+
+            const textDay =
+                Math.floor(gap / day);
+
+
+            const textHour =
+                Math.floor(
+                    (gap % day) / hour
+                );
+
+
+            const textMinute =
+                Math.floor(
+                    (gap % hour) / minute
+                );
+
+
+            const textSecond =
+                Math.floor(
+                    (gap % minute) / second
+                );
+
 
             const dayElement =
-                document.querySelector(".campaign-0 .day");
+                document.querySelector(
+                    ".campaign-0 .day"
+                );
+
 
             const hourElement =
-                document.querySelector(".campaign-0 .hour");
+                document.querySelector(
+                    ".campaign-0 .hour"
+                );
+
 
             const minuteElement =
-                document.querySelector(".campaign-0 .minute");
+                document.querySelector(
+                    ".campaign-0 .minute"
+                );
+
 
             const secondElement =
-                document.querySelector(".campaign-0 .second");
+                document.querySelector(
+                    ".campaign-0 .second"
+                );
+
 
             if (dayElement) {
-                dayElement.textContent = textDay;
+
+                dayElement.textContent =
+                    textDay;
+
             }
+
 
             if (hourElement) {
-                hourElement.textContent = textHour;
+
+                hourElement.textContent =
+                    textHour;
+
             }
+
 
             if (minuteElement) {
-                minuteElement.textContent = textMinute;
+
+                minuteElement.textContent =
+                    textMinute;
+
             }
+
 
             if (secondElement) {
-                secondElement.textContent = textSecond;
+
+                secondElement.textContent =
+                    textSecond;
+
             }
+
         }
 
-        /* Jalankan terus */
+
         countdown();
 
-        /* Update setiap 1 saat */
-        setInterval(countdown, 1000);
+        setInterval(
+            countdown,
+            1000
+        );
+
     }
+
 
     setupCountdown();
 
@@ -128,26 +434,22 @@ document.addEventListener("DOMContentLoaded", function () {
        ========================================================= */
 
     const weddingEvent = {
-        title: "Majlis Perkahwinan Sikin & Aziman",
 
-        /*
-         * 19 Disember 2026
-         * 11:00 AM Malaysia = 03:00 UTC
-         */
+        title:
+            "Majlis Perkahwinan Sikin & Aziman",
 
-        startDate: "20261219T030000Z",
+        startDate:
+            "20261219T030000Z",
 
-        /*
-         * 4:00 PM Malaysia = 08:00 UTC
-         */
-
-        endDate: "20261219T080000Z",
+        endDate:
+            "20261219T080000Z",
 
         location:
             "No 66 Blok 5B Jalan Merak, Felda Nitar 01, 86800 Mersing, Johor, Malaysia",
 
         description:
             "Majlis Perkahwinan Sikin & Aziman. Sabtu, 19 Disember 2026, 11:00 pagi hingga 4:00 petang."
+
     };
 
 
@@ -160,29 +462,48 @@ document.addEventListener("DOMContentLoaded", function () {
         const baseUrl =
             "https://calendar.google.com/calendar/render?action=TEMPLATE";
 
-        const params = new URLSearchParams({
-            text: eventData.title,
-            dates:
-                eventData.startDate +
-                "/" +
-                eventData.endDate,
-            details: eventData.description,
-            location: eventData.location
-        });
 
-        return baseUrl + "&" + params.toString();
+        const params =
+            new URLSearchParams({
+
+                text: eventData.title,
+
+                dates:
+                    eventData.startDate +
+                    "/" +
+                    eventData.endDate,
+
+                details:
+                    eventData.description,
+
+                location:
+                    eventData.location
+
+            });
+
+
+        return (
+            baseUrl +
+            "&" +
+            params.toString()
+        );
+
     }
 
 
     function addGoogleCalendar() {
 
         const googleLink =
-            generateGoogleCalendarLink(weddingEvent);
+            generateGoogleCalendarLink(
+                weddingEvent
+            );
+
 
         window.open(
             googleLink,
             "_blank"
         );
+
     }
 
 
@@ -197,125 +518,177 @@ document.addEventListener("DOMContentLoaded", function () {
             .replace(/\n/g, "\\n")
             .replace(/,/g, "\\,")
             .replace(/;/g, "\\;");
+
     }
 
 
     function generateICS(eventData) {
 
-        const title = escapeICSText(eventData.title);
-        const location = escapeICSText(eventData.location);
+        const title =
+            escapeICSText(
+                eventData.title
+            );
+
+
+        const location =
+            escapeICSText(
+                eventData.location
+            );
+
+
         const description =
-            escapeICSText(eventData.description);
+            escapeICSText(
+                eventData.description
+            );
+
 
         return [
+
             "BEGIN:VCALENDAR",
             "VERSION:2.0",
             "PRODID:-//Sikin & Aziman//Wedding//EN",
             "CALSCALE:GREGORIAN",
             "BEGIN:VEVENT",
+
             "UID:sikin-aziman-2026@wedding",
-            "DTSTAMP:20260912T000000Z",
-            "DTSTART:" + eventData.startDate,
-            "DTEND:" + eventData.endDate,
-            "SUMMARY:" + title,
-            "LOCATION:" + location,
-            "DESCRIPTION:" + description,
+
+            "DTSTAMP:20260913T000000Z",
+
+            "DTSTART:" +
+            eventData.startDate,
+
+            "DTEND:" +
+            eventData.endDate,
+
+            "SUMMARY:" +
+            title,
+
+            "LOCATION:" +
+            location,
+
+            "DESCRIPTION:" +
+            description,
+
             "END:VEVENT",
             "END:VCALENDAR"
+
         ].join("\r\n");
+
     }
 
 
-    function downloadICS(filename, content) {
+    function downloadICS(
+        filename,
+        content
+    ) {
 
-        const blob = new Blob(
-            [content],
-            {
-                type: "text/calendar;charset=utf-8"
-            }
-        );
+        const blob =
+            new Blob(
+                [content],
+                {
+                    type:
+                        "text/calendar;charset=utf-8"
+                }
+            );
+
 
         const url =
-            URL.createObjectURL(blob);
+            URL.createObjectURL(
+                blob
+            );
+
 
         const link =
             document.createElement("a");
 
-        link.href = url;
-        link.download = filename;
 
-        document.body.appendChild(link);
+        link.href = url;
+
+        link.download =
+            filename;
+
+
+        document.body.appendChild(
+            link
+        );
+
 
         link.click();
 
-        document.body.removeChild(link);
+
+        document.body.removeChild(
+            link
+        );
+
 
         setTimeout(function () {
-            URL.revokeObjectURL(url);
+
+            URL.revokeObjectURL(
+                url
+            );
+
         }, 1000);
+
     }
 
 
     function addAppleCalendar() {
 
         const icsContent =
-            generateICS(weddingEvent);
+            generateICS(
+                weddingEvent
+            );
+
 
         downloadICS(
             "Majlis-Perkahwinan-Sikin-Aziman.ics",
             icsContent
         );
+
     }
-
-
-    /* =========================================================
-       LOCATION
-       ========================================================= */
-
-    const weddingAddress =
-        "No 66 Blok 5B Jalan Merak, Felda Nitar 01, 86800 Mersing, Johor, Malaysia";
 
 
     /* =========================================================
        GOOGLE MAPS
        ========================================================= */
-function openGoogleMaps() {
-    const latitude = 2.3807618;
-    const longitude = 103.7116231;
 
-    window.open(
-        `https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}`,
-        '_blank'
-    );
-                          }
+    function openGoogleMaps() {
+
+        const latitude = 2.3807618;
+        const longitude = 103.7116231;
+
+
+        window.open(
+            "https://www.google.com/maps/dir/?api=1&destination=" +
+            latitude +
+            "," +
+            longitude,
+            "_blank"
+        );
+
+    }
 
 
     /* =========================================================
        WAZE
        ========================================================= */
-function openWaze() {
-    const latitude = 2.3807618;
-    const longitude = 103.7116231;
 
-    window.open(
-        `https://www.waze.com/ul?ll=${latitude}%2C${longitude}&navigate=yes`,
-        '_blank'
-    );
-                          }
-  
+    function openWaze() {
 
-    /* =========================================================
-       CONTACT
-       ========================================================= */
+        const latitude = 2.3807618;
+        const longitude = 103.7116231;
 
-    /*
-     * Nombor di bawah masih nombor contoh asal.
-     *
-     * Tukar kepada nombor sebenar apabila sudah ada.
-     */
 
-    const contactPhone =
-        "+60123456789";
+        window.open(
+            "https://www.waze.com/ul?ll=" +
+            latitude +
+            "%2C" +
+            longitude +
+            "&navigate=yes",
+            "_blank"
+        );
+
+    }
 
 
     /* =========================================================
@@ -327,10 +700,6 @@ function openWaze() {
         const message =
             "Assalamualaikum. Saya ingin bertanyakan sesuatu berkenaan Majlis Perkahwinan Sikin & Aziman.";
 
-        /*
-         * Buang simbol +, space dan -
-         * supaya nombor sesuai digunakan oleh WhatsApp.
-         */
 
         const cleanPhone =
             String(phoneNumber)
@@ -338,32 +707,37 @@ function openWaze() {
                 .replace(/\s/g, "")
                 .replace(/-/g, "");
 
+
         const whatsappUrl =
             "https://wa.me/" +
             cleanPhone +
             "?text=" +
             encodeURIComponent(message);
 
+
         window.open(
             whatsappUrl,
             "_blank"
         );
+
     }
 
 
     /* =========================================================
-       PHONE CALL
+       PHONE
        ========================================================= */
 
     function makePhoneCall(phoneNumber) {
 
         window.location.href =
-            "tel:" + phoneNumber;
+            "tel:" +
+            phoneNumber;
+
     }
 
 
     /* =========================================================
-       ANIMATION - REVEAL
+       REVEAL
        ========================================================= */
 
     function reveal() {
@@ -371,34 +745,40 @@ function openWaze() {
         const reveals =
             document.querySelectorAll(".reveal");
 
-        for (let i = 0; i < reveals.length; i++) {
+
+        for (
+            let i = 0;
+            i < reveals.length;
+            i++
+        ) {
 
             const windowHeight =
                 window.innerHeight;
+
 
             const elementTop =
                 reveals[i]
                     .getBoundingClientRect()
                     .top;
 
+
             const elementVisible = 10;
+
 
             if (
                 elementTop <
-                windowHeight - elementVisible
+                windowHeight -
+                elementVisible
             ) {
 
                 reveals[i]
                     .classList
                     .add("active");
 
-            } else {
-
-                reveals[i]
-                    .classList
-                    .remove("active");
             }
+
         }
+
     }
 
 
@@ -407,78 +787,80 @@ function openWaze() {
         reveal
     );
 
+
     reveal();
 
 
     /* =========================================================
-       BACKGROUND PETAL ANIMATION
+       PETALS
        ========================================================= */
 
     const petalContainer =
-        document.querySelector(".petal-container");
+        document.querySelector(
+            ".petal-container"
+        );
+
 
     const maxPetals = 70;
     const petalInterval = 100;
 
 
-    function createPetal() {
+    function createPetalOriginal() {
 
         if (
             !petalContainer ||
             petalContainer.childElementCount >= maxPetals
         ) {
+
             return;
+
         }
+
 
         const petal =
             document.createElement("div");
 
+
         petal.className = "petal";
 
-        const startY =
-            Math.random() * 100;
+
+        petal.style.top =
+            Math.random() * 100 + "%";
+
 
         const duration =
             4 + Math.random() * 2;
 
+
         const petalSize =
             5 + Math.random() * 10;
 
-        const petalOpacity =
-            0.3 + Math.random() * 0.5;
-
-
-        petal.style.top =
-            startY + "%";
 
         petal.style.width =
             petalSize + "px";
 
+
         petal.style.height =
             petalSize + "px";
 
+
         petal.style.opacity =
-            petalOpacity;
+            0.3 + Math.random() * 0.5;
+
 
         petal.style.animationDuration =
             duration + "s";
 
 
-        const translateX =
-            300 + Math.random() * 120;
-
-        const translateY =
-            300 + Math.random() * 120;
-
-
         petal.style.setProperty(
             "--translate-x",
-            translateX + "px"
+            300 + Math.random() * 120 + "px"
         );
+
 
         petal.style.setProperty(
             "--translate-y",
-            translateY + "px"
+            300 + Math.random() * 120 + "px"
         );
 
 
@@ -494,14 +876,16 @@ function openWaze() {
                 petal.parentNode.removeChild(
                     petal
                 );
+
             }
 
         }, duration * 1000);
+
     }
 
 
     setInterval(
-        createPetal,
+        createPetalOriginal,
         petalInterval
     );
 
@@ -512,27 +896,67 @@ function openWaze() {
 
     const toggleButtons = {
 
-        "calendar-btn": "calendar-menu",
+        "calendar-btn":
+            "calendar-menu",
 
-        "location-btn": "location-menu",
+        "location-btn":
+            "location-menu",
 
-        "music-btn": "music-menu",
+        "music-btn":
+            "music-menu",
 
-        "rsvp-btn": "rsvp-menu",
+        "rsvp-btn":
+            "rsvp-menu",
 
-        "ucapan-btn": "ucapan-menu",
+        "ucapan-btn":
+            "ucapan-menu",
 
-        "contact-btn": "contact-menu",
+        "contact-btn":
+            "contact-menu",
 
-        "kehadiran-btn": "rsvp-menu",
+        "kehadiran-btn":
+            "rsvp-menu",
 
-        "btn-hadir": "success-menu"
+        "btn-hadir":
+            "success-menu"
+
     };
 
 
-    /* =========================================================
-       TOGGLE MENU FUNCTION
-       ========================================================= */
+    function closeAllMenus() {
+
+        const menuIds =
+            [
+                ...new Set(
+                    Object.values(
+                        toggleButtons
+                    )
+                )
+            ];
+
+
+        menuIds.forEach(
+            function (menuId) {
+
+                const menu =
+                    document.getElementById(
+                        menuId
+                    );
+
+
+                if (menu) {
+
+                    menu.classList.remove(
+                        "open"
+                    );
+
+                }
+
+            }
+        );
+
+    }
+
 
     function toggleMenu(
         menuId,
@@ -540,173 +964,109 @@ function openWaze() {
     ) {
 
         if (clickEvent) {
+
             clickEvent.stopPropagation();
+
         }
+
 
         const menu =
-            document.getElementById(menuId);
+            document.getElementById(
+                menuId
+            );
+
 
         if (!menu) {
+
             return;
+
         }
 
 
-        if (
-            menu.classList.contains("open")
-        ) {
-
-            menu.classList.remove(
+        const isOpen =
+            menu.classList.contains(
                 "open"
             );
 
-        } else {
 
-            closeAllMenus();
+        closeAllMenus();
+
+
+        if (!isOpen) {
 
             menu.classList.add(
                 "open"
             );
+
         }
+
     }
 
 
-    /* =========================================================
-       CLOSE ALL MENUS
-       ========================================================= */
+    Object.entries(
+        toggleButtons
+    ).forEach(
+        function ([buttonId, menuId]) {
 
-    function closeAllMenus() {
-
-        const menuIds =
-            Object.values(toggleButtons);
-
-
-        for (
-            const menuId of menuIds
-        ) {
-
-            const menu =
+            const button =
                 document.getElementById(
-                    menuId
+                    buttonId
                 );
 
-            if (
-                menu &&
-                menu.classList.contains("open")
-            ) {
 
-                menu.classList.remove(
-                    "open"
-                );
+            if (!button) {
+
+                return;
+
             }
-        }
-    }
 
 
-    /* =========================================================
-       ADD CLICK EVENTS
-       ========================================================= */
+            button.addEventListener(
+                "click",
+                function (event) {
 
-    for (
-        const [buttonId, menuId]
-        of Object.entries(toggleButtons)
-    ) {
+                    toggleMenu(
+                        menuId,
+                        event
+                    );
 
-        const button =
-            document.getElementById(
-                buttonId
+                }
             );
 
-
-        if (!button) {
-            continue;
         }
+    );
 
-
-        button.addEventListener(
-            "click",
-            function (clickEvent) {
-
-                toggleMenu(
-                    menuId,
-                    clickEvent
-                );
-            }
-        );
-    }
-
-
-    /* =========================================================
-       CLOSE MENU WHEN CLICKING OUTSIDE
-       ========================================================= */
 
     document.addEventListener(
         "click",
         function () {
 
             closeAllMenus();
+
         }
     );
 
 
-    /* =========================================================
-       PREVENT MENU FROM CLOSING
-       ========================================================= */
+    document
+        .querySelectorAll(".toggle-menu")
+        .forEach(
+            function (menu) {
 
-    const menuIds =
-        Object.values(toggleButtons);
+                menu.addEventListener(
+                    "click",
+                    function (event) {
 
+                        event.stopPropagation();
 
-    for (
-        const menuId of menuIds
-    ) {
+                    }
+                );
 
-        const menu =
-            document.getElementById(
-                menuId
-            );
-
-
-        if (!menu) {
-            continue;
-        }
-
-
-        menu.addEventListener(
-            "click",
-            function (clickEvent) {
-
-                clickEvent.stopPropagation();
             }
         );
-    }
 
 
     /* =========================================================
-       CLOSE SPECIFIC MENU
-       ========================================================= */
-
-    function closeMenu(menuId) {
-
-        const menu =
-            document.getElementById(
-                menuId
-            );
-
-
-        if (
-            menu &&
-            menu.classList.contains("open")
-        ) {
-
-            menu.classList.remove(
-                "open"
-            );
-        }
-    }
-
-
-    /* =========================================================
-       CLOSE BUTTON - UCAPAN
+       CLOSE UCAPAN
        ========================================================= */
 
     const closeButton =
@@ -719,17 +1079,29 @@ function openWaze() {
 
         closeButton.addEventListener(
             "click",
-            function (clickEvent) {
+            function (event) {
 
-                clickEvent.preventDefault();
+                event.preventDefault();
+                event.stopPropagation();
 
-                clickEvent.stopPropagation();
 
-                closeMenu(
-                    "ucapan-menu"
-                );
+                const menu =
+                    document.getElementById(
+                        "ucapan-menu"
+                    );
+
+
+                if (menu) {
+
+                    menu.classList.remove(
+                        "open"
+                    );
+
+                }
+
             }
         );
+
     }
 
 
@@ -747,9 +1119,9 @@ function openWaze() {
 
         ucapanForm.addEventListener(
             "submit",
-            function (submitEvent) {
+            function (event) {
 
-                submitEvent.preventDefault();
+                event.preventDefault();
 
 
                 const formData =
@@ -758,82 +1130,83 @@ function openWaze() {
                     );
 
 
-                const actionUrl =
-                    ucapanForm.action;
-
-
                 fetch(
-                    actionUrl,
+                    ucapanForm.action,
                     {
                         method: "POST",
                         body: formData
                     }
                 )
 
-                    .then(
-                        function (response) {
+                .then(
+                    function (response) {
 
-                            if (response.ok) {
+                        if (!response.ok) {
 
-                                return response.text();
+                            throw new Error(
+                                "Form submission failed"
+                            );
 
-                            } else {
-
-                                throw new Error(
-                                    "Form submission failed"
-                                );
-                            }
                         }
-                    )
-
-                    .then(
-                        function () {
-
-                            const successMenu =
-                                document.getElementById(
-                                    "success-menu"
-                                );
 
 
-                            if (successMenu) {
+                        return response.text();
 
-                                successMenu.innerHTML =
-                                    "<div class='success-message'>" +
-                                    "<i class='bx bx-check'></i>" +
-                                    "<p>Mesej anda berjaya dihantar!</p>" +
-                                    "</div>";
+                    }
+                )
 
+                .then(
+                    function () {
 
-                                successMenu.classList.add(
-                                    "open"
-                                );
-                            }
-
-
-                            closeMenu(
-                                "ucapan-menu"
+                        const successMenu =
+                            document.getElementById(
+                                "success-menu"
                             );
 
 
-                            ucapanForm.reset();
-                        }
-                    )
+                        if (successMenu) {
 
-                    .catch(
-                        function (error) {
+                            successMenu.innerHTML =
+                                "<div class='success-box'>" +
+                                "<i class='bx bx-check-circle'></i>" +
+                                "<h2>Terima Kasih</h2>" +
+                                "<p>Mesej anda berjaya dihantar!</p>" +
+                                "</div>";
 
-                            console.error(
-                                "Error:",
-                                error
+
+                            closeAllMenus();
+
+
+                            successMenu.classList.add(
+                                "open"
                             );
 
-                            alert(
-                                "Maaf, mesej tidak dapat dihantar."
-                            );
                         }
-                    );
+
+
+                        ucapanForm.reset();
+
+                    }
+                )
+
+                .catch(
+                    function (error) {
+
+                        console.error(
+                            error
+                        );
+
+
+                        alert(
+                            "Maaf, mesej tidak dapat dihantar."
+                        );
+
+                    }
+                );
+
             }
         );
+
     }
 
 
@@ -863,87 +1236,111 @@ function openWaze() {
             }
         )
 
-            .then(
-                function (response) {
+        .then(
+            function (response) {
 
-                    if (response.ok) {
+                if (!response.ok) {
 
-                        return response.json();
+                    throw new Error(
+                        "Request failed"
+                    );
 
-                    } else {
-
-                        throw new Error(
-                            "Request failed"
-                        );
-                    }
                 }
-            )
 
-            .then(
-                function (data) {
 
-                    if (data.attend) {
+                return response.json();
 
-                        const successMenu =
+            }
+        )
+
+        .then(
+            function (data) {
+
+                if (data.attend) {
+
+                    const successMenu =
+                        document.getElementById(
+                            "success-menu"
+                        );
+
+
+                    if (successMenu) {
+
+                        successMenu.innerHTML =
+                            "<div class='success-box'>" +
+                            "<i class='" +
+                            iconClass +
+                            "'></i>" +
+                            "<h2>Terima Kasih</h2>" +
+                            "<p>" +
+                            successMessage +
+                            "</p>" +
+                            "</div>";
+
+
+                        closeAllMenus();
+
+
+                        successMenu.classList.add(
+                            "open"
+                        );
+
+                    }
+
+
+                    if (closeMenuId) {
+
+                        const menu =
                             document.getElementById(
-                                "success-menu"
-                            );
-
-
-                        if (successMenu) {
-
-                            successMenu.innerHTML =
-                                "<div class='success-message'>" +
-                                "<i class='" +
-                                iconClass +
-                                "'></i>" +
-                                "<p>" +
-                                successMessage +
-                                "</p>" +
-                                "</div>";
-
-
-                            successMenu.classList.add(
-                                "open"
-                            );
-                        }
-
-
-                        if (closeMenuId) {
-
-                            closeMenu(
                                 closeMenuId
                             );
+
+
+                        if (menu) {
+
+                            menu.classList.remove(
+                                "open"
+                            );
+
                         }
 
-                    } else {
-
-                        console.error(
-                            "Increment count error:",
-                            data.error
-                        );
-
-                        alert(
-                            "Terjadi kesilapan: " +
-                            (data.error || "Tidak diketahui")
-                        );
                     }
-                }
-            )
 
-            .catch(
-                function (error) {
+                } else {
 
                     console.error(
-                        "AJAX error:",
-                        error
+                        data.error
                     );
 
+
                     alert(
-                        "Error processing the request."
+                        "Terjadi kesilapan: " +
+                        (
+                            data.error ||
+                            "Tidak diketahui"
+                        )
                     );
+
                 }
-            );
+
+            }
+        )
+
+        .catch(
+            function (error) {
+
+                console.error(
+                    error
+                );
+
+
+                alert(
+                    "Error processing the request."
+                );
+
+            }
+        );
+
     }
 
 
@@ -961,9 +1358,10 @@ function openWaze() {
 
         btnHadir.addEventListener(
             "click",
-            function (clickEvent) {
+            function (event) {
 
-                clickEvent.stopPropagation();
+                event.stopPropagation();
+
 
                 incrementCount(
                     "count_hadir.php",
@@ -971,8 +1369,10 @@ function openWaze() {
                     "bx bxs-wink-smile",
                     "rsvp-menu"
                 );
+
             }
         );
+
     }
 
 
@@ -990,9 +1390,10 @@ function openWaze() {
 
         btnTidakHadir.addEventListener(
             "click",
-            function (clickEvent) {
+            function (event) {
 
-                clickEvent.stopPropagation();
+                event.stopPropagation();
+
 
                 incrementCount(
                     "count_tidak_hadir.php",
@@ -1000,22 +1401,15 @@ function openWaze() {
                     "bx bxs-sad",
                     "rsvp-menu"
                 );
+
             }
         );
+
     }
 
 
     /* =========================================================
-       EXPOSE FUNCTIONS TO HTML
-       =========================================================
-       Diperlukan kerana index.html menggunakan:
-       
-       onclick="addGoogleCalendar()"
-       onclick="addAppleCalendar()"
-       onclick="openGoogleMaps()"
-       onclick="openWaze()"
-       onclick="makePhoneCall()"
-       onclick="openWhatsApp()"
+       EXPOSE FUNCTIONS
        ========================================================= */
 
     window.addGoogleCalendar =
@@ -1035,10 +1429,5 @@ function openWaze() {
 
     window.makePhoneCall =
         makePhoneCall;
-
-
-    /* =========================================================
-       END
-       ========================================================= */
 
 });
