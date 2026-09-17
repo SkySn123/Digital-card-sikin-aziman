@@ -70,7 +70,144 @@ li {
 /* =========================================================
    OPENING
    ========================================================= */
+//* =========================================================
+   VIDEO INTRO — TAYANG DAHULU 11 SAAT
+   ========================================================= */
+
+.video-intro {
+    position: fixed;
+    inset: 0;
+
+    width: 100%;
+    height: 100vh;
+
+    z-index: 20000;
+
+    background: #000;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+
+    transition:
+        opacity 1s ease,
+        visibility 1s ease;
+}
+
+.video-intro video {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    display: block;
+}
+
+
+/* Video hilang selepas 11 saat */
+
+.video-intro.hide {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+
 /* =========================================================
+   OPENING
+   ========================================================= */
+
+.wedding-opening {
+    position: fixed;
+    inset: 0;
+
+    z-index: 11000;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background:
+        radial-gradient(
+            circle at center,
+            #FFFDF8 0%,
+            #FFF4D6 50%,
+            #F1C75B 100%
+        );
+
+    border: 10px solid var(--gold);
+
+    overflow: hidden;
+
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+
+    transition:
+        opacity 0.8s ease,
+        visibility 0.8s ease;
+}
+
+
+/* Opening muncul */
+
+.wedding-opening.show {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+
+/* Opening sedang ditutup selepas tekan BUKA */
+
+.wedding-opening.opening-hide {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+
+.wedding-opening::before {
+    content: "";
+
+    position: absolute;
+    inset: 14px;
+
+    border: 1px solid rgba(23, 59, 108, .65);
+
+    pointer-events: none;
+
+    z-index: 2;
+}
+
+
+.wedding-opening::after {
+    content: "";
+
+    position: absolute;
+    inset: 23px;
+
+    border: 1px solid rgba(165, 42, 58, .45);
+
+    pointer-events: none;
+
+    z-index: 2;
+}
+
+
+.opening-content {
+    position: relative;
+
+    z-index: 4;
+
+    text-align: center;
+
+    width: min(90%, 600px);
+   }* =========================================================
    OPENING VIDEO
    ========================================================= */
 
