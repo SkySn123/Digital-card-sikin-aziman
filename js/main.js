@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
        ===================================================== */
 
     const VIDEO_START = 0;
-    const VIDEO_END = 12;
+    const VIDEO_END = 11;
 
     const MAX_PETALS = 45;
     const PETAL_INTERVAL = 450;
@@ -178,58 +178,7 @@ setTimeout(() => {
     }
 
 }, 11000);
-    /* =====================================================
-       OPENING VIDEO
-       ===================================================== */
-
-    if (openingVideo) {
-
-        /*
-         * Kita tidak perlukan HTML loop kerana
-         * JavaScript sendiri mengawal loop 0–12 saat.
-         */
-        openingVideo.removeAttribute("loop");
-
-
-        openingVideo.addEventListener(
-            "loadedmetadata",
-            () => {
-
-                if (
-                    VIDEO_START >= 0 &&
-                    VIDEO_START < openingVideo.duration
-                ) {
-                    openingVideo.currentTime =
-                        VIDEO_START;
-                }
-
-                openingVideo.play()
-                    .catch(error => {
-                        console.log(
-                            "Autoplay video tidak dibenarkan:",
-                            error
-                        );
-                    });
-            }
-        );
-
-
-        openingVideo.addEventListener(
-            "timeupdate",
-            () => {
-
-                if (
-                    VIDEO_END > VIDEO_START &&
-                    openingVideo.currentTime >= VIDEO_END
-                ) {
-                    openingVideo.currentTime =
-                        VIDEO_START;
-                }
-            }
-        );
-    }
-
-
+   
     /* =====================================================
        OPEN INVITATION
        ===================================================== */
@@ -284,6 +233,8 @@ setTimeout(() => {
                    ----------------------------------------- */
 
                 if (weddingOpening) {
+
+               weddingOpening.classList.remove("show");
 
                     weddingOpening.classList.add(
                         "opening-hide"
