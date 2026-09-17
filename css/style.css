@@ -685,7 +685,9 @@ li {
     gap: 15px;
 
     font-family: "Playfair Display", serif;
-    font-size: 15px;
+    font-size: clamp(65px, 15vw, 110px);
+
+    line-height: .78;
     letter-spacing: 2px;
 
     color: var(--sage);
