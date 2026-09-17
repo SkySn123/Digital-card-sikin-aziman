@@ -678,16 +678,14 @@ li {
 
 .intro .date {
     margin-top: 40px;
-
+    font-weight: 400;
     display: flex;
     justify-content: center;
 
     gap: 15px;
 
     font-family: "Playfair Display", serif;
-    font-size: clamp(65px, 15vw, 110px);
-
-    line-height: .78;
+    font-size: 20px;
     letter-spacing: 2px;
 
     color: var(--sage);
