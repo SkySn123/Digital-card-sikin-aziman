@@ -9,7 +9,71 @@ document.addEventListener("DOMContentLoaded", function () {
     const doorScreen = document.querySelector(".door-screen");
     const card = document.querySelector(".card");
     const audioPlayer = document.getElementById("audio-player");
+    const openingVideo = document.getElementById("openingVideo");
+    const VIDEO_START = 0;
+    const VIDEO_END = 12;
 
+/* =========================================================
+   OPENING VIDEO CONTROL
+   ========================================================= */
+
+if (openingVideo) {
+
+    openingVideo.addEventListener(
+        "loadedmetadata",
+        function () {
+
+            /*
+             * Pastikan masa mula tidak melebihi
+             * panjang video.
+             */
+
+            if (
+                VIDEO_START >= 0 &&
+                VIDEO_START < openingVideo.duration
+            ) {
+
+                openingVideo.currentTime =
+                    VIDEO_START;
+
+            }
+
+            openingVideo.play()
+                .catch(function (error) {
+
+                    console.log(
+                        "Video autoplay tidak dapat dimainkan:",
+                        error
+                    );
+
+                });
+
+        }
+    );
+
+
+    /*
+     * Check masa video.
+     */
+
+    openingVideo.addEventListener(
+        "timeupdate",
+        function () {
+
+            if (
+                VIDEO_END > VIDEO_START &&
+                openingVideo.currentTime >= VIDEO_END
+            ) {
+
+                openingVideo.currentTime =
+                    VIDEO_START;
+
+            }
+
+        }
+    );
+
+}
 
     /* =========================================================
        OPEN WEDDING INVITATION
