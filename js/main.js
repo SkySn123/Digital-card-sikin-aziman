@@ -57,7 +57,127 @@ document.addEventListener("DOMContentLoaded", () => {
         doorScreen.style.pointerEvents = "none";
     }
 
+/* =====================================================
+   VIDEO INTRO — 11 SAAT
+   ===================================================== */
 
+const videoIntro =
+    document.getElementById("videoIntro");
+
+let openingShown = false;
+
+
+/* =====================================================
+   INITIAL VIDEO STATE
+   ===================================================== */
+
+if (weddingOpening) {
+
+    weddingOpening.classList.remove("show");
+
+    weddingOpening.classList.remove(
+        "opening-hide"
+    );
+
+}
+
+
+/* =====================================================
+   SHOW OPENING SELEPAS 11 SAAT
+   ===================================================== */
+
+function showWeddingOpening() {
+
+    if (openingShown) {
+        return;
+    }
+
+    openingShown = true;
+
+
+    /* Hentikan video */
+
+    if (openingVideo) {
+
+        openingVideo.pause();
+
+    }
+
+
+    /* Fade out video */
+
+    if (videoIntro) {
+
+        videoIntro.classList.add("hide");
+
+    }
+
+
+    /* Munculkan opening */
+
+    if (weddingOpening) {
+
+        weddingOpening.classList.add("show");
+
+    }
+
+}
+
+
+/* =====================================================
+   VIDEO PLAY
+   ===================================================== */
+
+if (openingVideo) {
+
+    openingVideo.currentTime = VIDEO_START;
+
+
+    openingVideo.play()
+        .catch(error => {
+
+            console.log(
+                "Autoplay video tidak dibenarkan:",
+                error
+            );
+
+        });
+
+
+    /* Pantau masa video */
+
+    openingVideo.addEventListener(
+        "timeupdate",
+        () => {
+
+            if (
+                !openingShown &&
+                openingVideo.currentTime >= VIDEO_END
+            ) {
+
+                showWeddingOpening();
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   BACKUP TIMER
+   ===================================================== */
+
+setTimeout(() => {
+
+    if (!openingShown) {
+
+        showWeddingOpening();
+
+    }
+
+}, 11000);
     /* =====================================================
        OPENING VIDEO
        ===================================================== */
