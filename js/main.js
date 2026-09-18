@@ -180,84 +180,94 @@ document.addEventListener("DOMContentLoaded", () => {
 
     }
 
+/* =====================================================
+   MUSIC
+   LAGU MULA BILA USER SENTUH SKRIN
+   ===================================================== */
 
-    /* =====================================================
-       MUSIC
-       ===================================================== */
-
-    function startMusicAtBeginning() {
-
-        if (!audioPlayer) {
-            return;
-        }
+let musicStarted = false;
 
 
-        audioPlayer.loop = true;
-        audioPlayer.volume = 0.8;
+function startMusicAfterInteraction() {
+
+    if (
+        !audioPlayer ||
+        musicStarted
+    ) {
+        return;
+    }
 
 
-        try {
-
-            audioPlayer.currentTime = 0;
-
-        }
-
-        catch (error) {
-
-            console.log(
-                "Tidak dapat set audio ke 0:",
-                error
-            );
-
-        }
+    audioPlayer.loop = true;
+    audioPlayer.volume = 0.8;
 
 
-        const promise =
-            audioPlayer.play();
+    /* -----------------------------------------
+       MULA DARI 0:00
+       ----------------------------------------- */
 
+    try {
 
-        if (promise !== undefined) {
+        audioPlayer.currentTime = 0;
 
-            promise.catch(
-                error => {
+    }
 
-                    console.log(
-                        "Autoplay audio disekat browser:",
-                        error
-                    );
+    catch (error) {
 
-                }
-            );
-
-        }
+        console.log(
+            "Tidak dapat set lagu ke 0:",
+            error
+        );
 
     }
 
 
-    /* =====================================================
-       AUDIO FALLBACK
-       ===================================================== */
+    /* -----------------------------------------
+       PLAY LAGU
+       ----------------------------------------- */
 
-    document.addEventListener(
-        "pointerdown",
-        () => {
+    const playPromise =
+        audioPlayer.play();
 
-            if (
-                audioPlayer &&
-                audioPlayer.paused
-            ) {
 
-                audioPlayer.play()
-                    .catch(() => {});
+    if (playPromise !== undefined) {
 
-            }
+        playPromise
+            .then(() => {
 
-        },
-        {
-            once: true
-        }
-    );
+                musicStarted = true;
 
+                console.log(
+                    "🎵 Lagu bermula selepas user sentuh skrin."
+                );
+
+            })
+            .catch(error => {
+
+                console.log(
+                    "Lagu gagal dimainkan:",
+                    error
+                );
+
+            });
+
+    }
+
+}
+
+
+/* =====================================================
+   USER SENTUH SKRIN
+   ===================================================== */
+
+document.addEventListener(
+    "pointerdown",
+    startMusicAfterInteraction,
+    {
+        once: true,
+        passive: true
+    }
+);
 
     /* =====================================================
        START VIDEO
