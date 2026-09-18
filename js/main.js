@@ -1092,24 +1092,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function openGoogleMaps() {
 
-        const address =
-            "No 66 Blok 5B Jalan Merak, Felda Nitar 01, 86800 Mersing, Johor, Malaysia";
+         const latitude = 2.3807618;
+         const longitude = 103.7116231;
 
+    const url =
+        "https://www.google.com/maps/dir/?api=1" +
+        "&destination=" +
+        latitude +
+        "," +
+        longitude +
+        "&travelmode=driving";
 
-        const url =
-            "https://www.google.com/maps/dir/?api=1&destination=" +
-            encodeURIComponent(
-                address
-            );
+    window.open(
+        url,
+        "_blank",
+        "noopener,noreferrer"
+    );
 
-
-        window.open(
-            url,
-            "_blank",
-            "noopener,noreferrer"
-        );
-
-    }
+}
 
 
     /* =====================================================
