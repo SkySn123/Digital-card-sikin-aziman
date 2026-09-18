@@ -720,7 +720,7 @@ li {
 
     background-image: url("../Image/Flower Page 1.png");
     background-repeat: no-repeat;
-    background-size: cover;
+    background-size: 130% auto;
     background-position: center center;
 
 
