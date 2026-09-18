@@ -55,6 +55,8 @@ document.addEventListener("DOMContentLoaded", () => {
     let openingShown = false;
     let invitationOpened = false;
 
+    let musicStarted = false;
+
     let petalsStarted = false;
     let petalTimer = null;
 
@@ -76,7 +78,10 @@ document.addEventListener("DOMContentLoaded", () => {
     if (doorScreen) {
 
         doorScreen.style.display = "none";
+        doorScreen.style.visibility = "hidden";
+        doorScreen.style.opacity = "0";
         doorScreen.style.pointerEvents = "none";
+        doorScreen.style.zIndex = "-1";
 
     }
 
@@ -109,8 +114,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* =====================================================
-       VIDEO INTRO
-       SELEPAS 11 SAAT → OPENING
+       VIDEO INTRO → OPENING
+       SELEPAS 11 SAAT
        ===================================================== */
 
     function showWeddingOpening() {
@@ -129,18 +134,25 @@ document.addEventListener("DOMContentLoaded", () => {
         if (openingVideo) {
 
             try {
+
                 openingVideo.pause();
+
             }
 
             catch (error) {
-                console.log(error);
+
+                console.log(
+                    "Video gagal dihentikan:",
+                    error
+                );
+
             }
 
         }
 
 
         /* -----------------------------------------
-           HILANGKAN VIDEO SEPENUHNYA
+           HILANGKAN VIDEO
            ----------------------------------------- */
 
         if (videoIntro) {
@@ -180,109 +192,140 @@ document.addEventListener("DOMContentLoaded", () => {
 
     }
 
-/* =====================================================
-   MUSIC
-   AUTOPLAY + FALLBACK FIRST USER INTERACTION
-   ===================================================== */
 
-let musicStarted = false;
+    /* =====================================================
+       MUSIC
+       AUTOPLAY + FALLBACK
+       ===================================================== */
 
-function startMusic() {
+    function startMusic() {
 
-    if (
-        !audioPlayer ||
-        musicStarted
-    ) {
-        return;
-    }
-
-    audioPlayer.loop = true;
-    audioPlayer.volume = 0.8;
-
-    try {
-
-        audioPlayer.currentTime = 0;
-
-    }
-
-    catch (error) {
-
-        console.log(
-            "Tidak dapat set lagu ke 0:",
-            error
-        );
-
-    }
+        if (
+            !audioPlayer ||
+            musicStarted
+        ) {
+            return;
+        }
 
 
-    const playPromise =
-        audioPlayer.play();
+        audioPlayer.loop = true;
+        audioPlayer.volume = 0.8;
 
 
-    if (playPromise !== undefined) {
+        /* -----------------------------------------
+           MULA DARI 0:00
+           ----------------------------------------- */
 
-        playPromise
-            .then(() => {
+        try {
+
+            audioPlayer.currentTime = 0;
+
+        }
+
+        catch (error) {
+
+            console.log(
+                "Tidak dapat set lagu ke 0:",
+                error
+            );
+
+        }
+
+
+        /* -----------------------------------------
+           CUBA PLAY
+           ----------------------------------------- */
+
+        const playPromise =
+            audioPlayer.play();
+
+
+        if (
+            playPromise &&
+            typeof playPromise.then === "function"
+        ) {
+
+            playPromise
+                .then(() => {
+
+                    musicStarted = true;
+
+                    console.log(
+                        "🎵 Muzik berjaya dimainkan."
+                    );
+
+                })
+                .catch(error => {
+
+                    /*
+                     * Browser mungkin menyekat
+                     * autoplay audio.
+                     *
+                     * Ini normal.
+                     *
+                     * Kita akan cuba semula apabila
+                     * user melakukan interaksi.
+                     */
+
+                    console.log(
+                        "Autoplay muzik disekat browser. Menunggu interaksi user.",
+                        error
+                    );
+
+                });
+
+        }
+
+        else {
+
+            /*
+             * Sesetengah browser tidak
+             * mengembalikan Promise.
+             */
+
+            if (!audioPlayer.paused) {
 
                 musicStarted = true;
 
-                console.log(
-                    "🎵 Muzik berjaya dimainkan."
-                );
+            }
 
-            })
-            .catch(error => {
-
-                /*
-                 * Browser mungkin menyekat
-                 * autoplay audio.
-                 *
-                 * Jangan anggap sebagai error besar.
-                 * Kita akan cuba semula apabila
-                 * user menyentuh skrin.
-                 */
-
-                console.log(
-                    "Autoplay muzik disekat browser. Menunggu interaksi user.",
-                    error
-                );
-
-            });
+        }
 
     }
 
-}
 
+    /* =====================================================
+       MUSIC FALLBACK
+       FIRST USER INTERACTION
+       ===================================================== */
 
-/* =====================================================
-   FIRST USER INTERACTION
-   ===================================================== */
+    function startMusicAfterInteraction() {
 
-function startMusicAfterInteraction() {
+        if (musicStarted) {
+            return;
+        }
 
-    if (musicStarted) {
-        return;
+        startMusic();
+
     }
 
-    startMusic();
 
-}
+    /*
+     * Jangan gunakan { once: true }.
+     *
+     * Jika browser masih belum membenarkan
+     * audio pada interaksi pertama, kita masih
+     * mahu mencuba pada interaksi seterusnya.
+     */
 
+    document.addEventListener(
+        "pointerdown",
+        startMusicAfterInteraction,
+        {
+            passive: true
+        }
+    );
 
-/*
- * Jangan guna { once: true }.
- *
- * Kalau percubaan pertama gagal,
- * kita masih mahu percubaan seterusnya.
- */
-
-document.addEventListener(
-    "pointerdown",
-    startMusicAfterInteraction,
-    {
-        passive: true
-    }
-);
 
     /* =====================================================
        START VIDEO
@@ -295,6 +338,11 @@ document.addEventListener(
             openingVideo.muted = true;
             openingVideo.playsInline = true;
             openingVideo.loop = false;
+
+
+            /* -----------------------------------------
+               VIDEO MULA DARI 0
+               ----------------------------------------- */
 
             try {
 
@@ -313,19 +361,21 @@ document.addEventListener(
             }
 
 
+            /* -----------------------------------------
+               PLAY VIDEO
+               ----------------------------------------- */
+
             const playVideo = () => {
 
                 openingVideo.play()
-                    .catch(
-                        error => {
+                    .catch(error => {
 
-                            console.log(
-                                "Autoplay video tidak dibenarkan:",
-                                error
-                            );
+                        console.log(
+                            "Autoplay video tidak dibenarkan:",
+                            error
+                        );
 
-                        }
-                    );
+                    });
 
             };
 
@@ -353,14 +403,17 @@ document.addEventListener(
         }
 
 
-        /* Lagu mula bersama video */
+        /* -----------------------------------------
+           CUBA AUTOPLAY MUSIC
+           Jika disekat browser,
+           pointerdown akan cuba semula.
+           ----------------------------------------- */
 
         startMusic();
 
 
-
         /* -----------------------------------------
-           TEPAT 11 SAAT
+           SELEPAS 11 SAAT → OPENING
            ----------------------------------------- */
 
         setTimeout(
@@ -394,11 +447,18 @@ document.addEventListener(
         if (openingVideo) {
 
             try {
+
                 openingVideo.pause();
+
             }
 
             catch (error) {
-                console.log(error);
+
+                console.log(
+                    "Video gagal dihentikan:",
+                    error
+                );
+
             }
 
         }
@@ -422,7 +482,7 @@ document.addEventListener(
 
 
         /* -----------------------------------------
-           PAPARKAN CARD DAHULU
+           PAPARKAN CARD
            ----------------------------------------- */
 
         if (card) {
@@ -487,7 +547,9 @@ document.addEventListener(
 
             if (doorScreen) {
 
-                doorScreen.classList.add("open");
+                doorScreen.classList.add(
+                    "open"
+                );
 
             }
 
@@ -502,7 +564,9 @@ document.addEventListener(
 
             if (doorScreen) {
 
-                doorScreen.classList.remove("open");
+                doorScreen.classList.remove(
+                    "open"
+                );
 
                 doorScreen.style.display = "none";
                 doorScreen.style.visibility = "hidden";
@@ -528,7 +592,8 @@ document.addEventListener(
 
 
             /* -------------------------------------
-               PASTIKAN MENU BAWAH AKTIF
+               AKTIFKAN MENU BAWAH
+               HANYA SELEPAS PINTU SELESAI
                ------------------------------------- */
 
             enableBottomMenu();
@@ -547,7 +612,6 @@ document.addEventListener(
 
             startPetals();
 
-
         }, 2500);
 
     }
@@ -555,6 +619,7 @@ document.addEventListener(
 
     /* =====================================================
        WAX SEAL BUTTON
+       GUNA CLICK SAHAJA
        ===================================================== */
 
     if (waxSeal) {
@@ -568,26 +633,6 @@ document.addEventListener(
 
                 openInvitation();
 
-            }
-        );
-
-
-        /* -----------------------------------------
-           TELEFON / TOUCH
-           ----------------------------------------- */
-
-        waxSeal.addEventListener(
-            "touchend",
-            event => {
-
-                event.preventDefault();
-                event.stopPropagation();
-
-                openInvitation();
-
-            },
-            {
-                passive: false
             }
         );
 
@@ -683,7 +728,8 @@ document.addEventListener(
             document.createElement("div");
 
 
-        petal.className = "petal";
+        petal.className =
+            "petal";
 
 
         petal.style.left =
@@ -758,6 +804,10 @@ document.addEventListener(
         petalsStarted = true;
 
 
+        /* -----------------------------------------
+           PETALS AWAL
+           ----------------------------------------- */
+
         for (
             let i = 0;
             i < 12;
@@ -771,6 +821,10 @@ document.addEventListener(
 
         }
 
+
+        /* -----------------------------------------
+           PETALS BERTERUSAN
+           ----------------------------------------- */
 
         petalTimer =
             setInterval(
@@ -820,7 +874,9 @@ document.addEventListener(
 
 
             if (gap < 0) {
+
                 gap = 0;
+
             }
 
 
@@ -1116,26 +1172,31 @@ document.addEventListener(
        GOOGLE MAPS
        ===================================================== */
 
-function openGoogleMaps() {
+    function openGoogleMaps() {
 
-    const latitude = 2.3807618;
-    const longitude = 103.7116231;
+        const latitude =
+            2.3807618;
 
-    const url =
-        "https://www.google.com/maps/dir/?api=1" +
-        "&destination=" +
-        latitude +
-        "," +
-        longitude +
-        "&travelmode=driving";
+        const longitude =
+            103.7116231;
 
-    window.open(
-        url,
-        "_blank",
-        "noopener,noreferrer"
-    );
 
-}
+        const url =
+            "https://www.google.com/maps/dir/?api=1" +
+            "&destination=" +
+            latitude +
+            "," +
+            longitude +
+            "&travelmode=driving";
+
+
+        window.open(
+            url,
+            "_blank",
+            "noopener,noreferrer"
+        );
+
+    }
 
 
     /* =====================================================
@@ -1388,6 +1449,7 @@ function openGoogleMaps() {
 
     /* =====================================================
        BOTTOM MENU BUTTONS
+       GUNA CLICK SAHAJA
        ===================================================== */
 
     Object.entries(
@@ -1452,15 +1514,6 @@ function openGoogleMaps() {
             button.addEventListener(
                 "click",
                 handleMenuClick
-            );
-
-
-            button.addEventListener(
-                "touchend",
-                handleMenuClick,
-                {
-                    passive: false
-                }
             );
 
         }
@@ -1738,6 +1791,9 @@ function openGoogleMaps() {
         successMenu.style.pointerEvents =
             "auto";
 
+        successMenu.style.visibility =
+            "visible";
+
         successMenu.classList.add(
             "open"
         );
@@ -1826,7 +1882,7 @@ function openGoogleMaps() {
 
 
     /* =====================================================
-       RSVP BUTTONS
+       RSVP BUTTON — HADIR
        ===================================================== */
 
     const btnHadir =
@@ -1856,6 +1912,10 @@ function openGoogleMaps() {
 
     }
 
+
+    /* =====================================================
+       RSVP BUTTON — TIDAK HADIR
+       ===================================================== */
 
     const btnTidakHadir =
         document.getElementById(
@@ -1955,13 +2015,6 @@ function openGoogleMaps() {
 
 
     /* =====================================================
-       FINAL MENU INITIALISATION
-       ===================================================== */
-
-    enableBottomMenu();
-
-
-    /* =====================================================
        GLOBAL FUNCTIONS
        ===================================================== */
 
@@ -1984,4 +2037,3 @@ function openGoogleMaps() {
         makePhoneCall;
 
 });
-     
