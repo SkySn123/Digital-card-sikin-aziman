@@ -722,7 +722,7 @@ li {
     background-image: url("../Image/Flower Page 1.png");
     background-repeat: no-repeat;
     background-position: center center;
-    background-size: cover;
+    background-size: 120%;
 
     background-color: var(--paper);
 }
