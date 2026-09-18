@@ -182,13 +182,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
 /* =====================================================
    MUSIC
-   LAGU MULA BILA USER SENTUH SKRIN
+   AUTOPLAY + FALLBACK FIRST USER INTERACTION
    ===================================================== */
 
 let musicStarted = false;
 
-
-function startMusicAfterInteraction() {
+function startMusic() {
 
     if (
         !audioPlayer ||
@@ -197,14 +196,8 @@ function startMusicAfterInteraction() {
         return;
     }
 
-
     audioPlayer.loop = true;
     audioPlayer.volume = 0.8;
-
-
-    /* -----------------------------------------
-       MULA DARI 0:00
-       ----------------------------------------- */
 
     try {
 
@@ -222,10 +215,6 @@ function startMusicAfterInteraction() {
     }
 
 
-    /* -----------------------------------------
-       PLAY LAGU
-       ----------------------------------------- */
-
     const playPromise =
         audioPlayer.play();
 
@@ -238,14 +227,23 @@ function startMusicAfterInteraction() {
                 musicStarted = true;
 
                 console.log(
-                    "🎵 Lagu bermula selepas user sentuh skrin."
+                    "🎵 Muzik berjaya dimainkan."
                 );
 
             })
             .catch(error => {
 
+                /*
+                 * Browser mungkin menyekat
+                 * autoplay audio.
+                 *
+                 * Jangan anggap sebagai error besar.
+                 * Kita akan cuba semula apabila
+                 * user menyentuh skrin.
+                 */
+
                 console.log(
-                    "Lagu gagal dimainkan:",
+                    "Autoplay muzik disekat browser. Menunggu interaksi user.",
                     error
                 );
 
@@ -257,14 +255,31 @@ function startMusicAfterInteraction() {
 
 
 /* =====================================================
-   USER SENTUH SKRIN
+   FIRST USER INTERACTION
    ===================================================== */
+
+function startMusicAfterInteraction() {
+
+    if (musicStarted) {
+        return;
+    }
+
+    startMusic();
+
+}
+
+
+/*
+ * Jangan guna { once: true }.
+ *
+ * Kalau percubaan pertama gagal,
+ * kita masih mahu percubaan seterusnya.
+ */
 
 document.addEventListener(
     "pointerdown",
     startMusicAfterInteraction,
     {
-        once: true,
         passive: true
     }
 );
@@ -340,7 +355,8 @@ document.addEventListener(
 
         /* Lagu mula bersama video */
 
-        startMusicAtBeginning();
+        startMusic();
+
 
 
         /* -----------------------------------------
