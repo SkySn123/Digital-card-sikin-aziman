@@ -1090,10 +1090,10 @@ document.addEventListener("DOMContentLoaded", () => {
        GOOGLE MAPS
        ===================================================== */
 
-    function openGoogleMaps() {
+function openGoogleMaps() {
 
-         const latitude = 2.3807618;
-         const longitude = 103.7116231;
+    const latitude = 2.3807618;
+    const longitude = 103.7116231;
 
     const url =
         "https://www.google.com/maps/dir/?api=1" +
