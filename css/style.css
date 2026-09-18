@@ -721,8 +721,9 @@ li {
 
     background-image: url("../Image/Flower Page 1.png");
     background-repeat: no-repeat;
-    background-position: center center;
-    background-size: 200%;
+    background-size: 130% auto;
+    background-position: 40% center;
+
 
     background-color: var(--paper);
 }
