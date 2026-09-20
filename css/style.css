@@ -707,100 +707,51 @@ li {
 
 .intro {
     min-height: 100vh;
+    width: 100%;
+
+    padding: 0;
+    margin: 0;
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    text-align: center;
-
-    padding: 70px 10px;
-
     position: relative;
 
     background-image: url("../Image/1789857826472.png");
     background-repeat: no-repeat;
-    background-size: cover;
     background-position: center center;
-
+    background-size: cover;
 
     background-color: var(--paper);
+
+    text-align: center;
 }
+
+
+/* BUANG ORNAMENT ❦ */
 
 .intro::before,
 .intro::after {
-    content: "❦";
-
-    position: absolute;
-
-    color: var(--gold);
-    font-size: 70px;
-    opacity: .3;
+    display: none !important;
 }
 
-.intro::before {
-    top: 50px;
-    left: 30px;
-}
 
-.intro::after {
-    bottom: 50px;
-    right: 30px;
-
-    transform: rotate(180deg);
-}
+/* SEMBUNYIKAN SEMUA CONTENT */
 
 .intro .content {
-    display: none;
-
+    display: none !important;
 }
 
-.intro-small {
-    font-size: 25px;
 
-    margin-bottom: 35px;
+/* Pastikan tulisan lama tidak muncul */
 
-    color: var(--brown);
-}
-
-.intro .title {
-    font-family: "Playfair Display", serif;
-    text-transform: uppercase;
-
-    letter-spacing: 5px;
-    font-size: 13px;
-
-    color: var(--rose);
-
-    margin-bottom: 20px;
-}
-
-.intro h2 {
-    font-family: "Allura", cursive;
-    font-weight: 400;
-
-    font-size: clamp(65px, 15vw, 110px);
-
-    line-height: .78;
-
-    color: var(--brown);
-}
-
+.intro .intro-small,
+.intro .title,
+.intro h2,
 .intro .date {
-    margin-top: 40px;
-    font-weight: 800;
-    display: flex;
-    justify-content: center;
-
-    gap: 15px;
-
-    font-family: "Playfair Display", serif;
-    font-size: 10px;
-    letter-spacing: 2px;
-
-    color: var(--sage);
-}
-
+    display: none !important;
+               }
 
 /* =========================================================
    INFO
