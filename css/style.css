@@ -751,8 +751,8 @@ li {
 }
 
 .intro .content {
-    position: relative;
-    z-index: 4;
+    display: none;
+
 }
 
 .intro-small {
