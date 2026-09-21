@@ -1,27 +1,64 @@
 <?php
+
+header('Content-Type: application/json; charset=utf-8');
+
 $servername = "127.0.0.1:3306";
 $username = "root";
 $password = "";
 $database = "kad_kahwin";
 
-$connection = mysqli_connect($servername, $username, $password);
+$connection = mysqli_connect(
+    $servername,
+    $username,
+    $password,
+    $database
+);
 
 if (!$connection) {
-    echo json_encode(['attend' => false, 'error' => 'Database connection failed']);
+    echo json_encode([
+        'attend' => false,
+        'error' => 'Database connection failed: ' . mysqli_connect_error()
+    ]);
     exit;
 }
 
-mysqli_select_db($connection, $database);
+if ($_SERVER["REQUEST_METHOD"] !== "POST") {
+    echo json_encode([
+        'attend' => false,
+        'error' => 'Invalid request method'
+    ]);
+    exit;
+}
 
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && $_POST['action'] === 'increment') {
-    $update_query = "UPDATE `kehadiran` SET `jumlah_kehadiran` = `jumlah_kehadiran` + 1 WHERE `id` = 1";
+if (!isset($_POST['action']) || $_POST['action'] !== 'increment') {
+    echo json_encode([
+        'attend' => false,
+        'error' => 'Invalid action'
+    ]);
+    exit;
+}
 
-    if (mysqli_query($connection, $update_query)) {
-        echo json_encode(['attend' => true]);
-    } else {
-        echo json_encode(['attend' => false, 'error' => mysqli_error($connection)]);
-    }
+$sql = "
+    UPDATE kehadiran
+    SET jumlah_kehadiran = jumlah_kehadiran + 1
+    WHERE id = 1
+";
+
+if (mysqli_query($connection, $sql)) {
+
+    echo json_encode([
+        'attend' => true,
+        'message' => 'Kehadiran berjaya direkodkan'
+    ]);
+
+} else {
+
+    echo json_encode([
+        'attend' => false,
+        'error' => mysqli_error($connection)
+    ]);
+
 }
 
 mysqli_close($connection);
-?>
+exit;
