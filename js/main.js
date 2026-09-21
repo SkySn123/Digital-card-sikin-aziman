@@ -495,59 +495,74 @@ document.addEventListener("DOMContentLoaded", () => {
        OPEN DOOR
        ===================================================== */
 
-    function openDoor() {
+   function openDoor() {
 
-        if (
-            !doorScreen ||
-            doorOpened
-        ) {
+    if (!doorScreen || doorOpened) {
+        return;
+    }
 
+    doorOpened = true;
+
+    console.log("🚪 USER TEKAN PINTU");
+
+    /*
+     * =================================================
+     * 1. MULAKAN VIDEO DAHULU
+     * =================================================
+     *
+     * Video terus berada di layer paling atas.
+     */
+    startOpeningVideo();
+
+
+    /*
+     * =================================================
+     * 2. BARU BUKA PINTU
+     * =================================================
+     *
+     * Animation pintu berlaku di belakang video.
+     */
+    doorScreen.classList.add("open");
+
+
+    /*
+     * =================================================
+     * 3. FADE OUT DOOR
+     * =================================================
+     */
+
+    setTimeout(() => {
+
+        if (!doorScreen) {
             return;
-
         }
 
+        doorScreen.style.opacity = "0";
+        doorScreen.style.pointerEvents = "none";
 
-        doorOpened = true;
-
-
-        console.log(
-            "🚪 USER TEKAN PINTU"
-        );
+    }, 100);
 
 
-        /* ---------------------------------------------
-           OPEN DOOR
-           --------------------------------------------- */
+    /*
+     * =================================================
+     * 4. BUANG DOOR SEPENUHNYA
+     * =================================================
+     */
 
-        doorScreen.classList.add(
-            "open"
-        );
+    setTimeout(() => {
 
+        if (!doorScreen) {
+            return;
+        }
 
-        /*
-         * Penting:
-         * Video dan muzik dimulakan terus daripada
-         * event click user untuk membantu mobile
-         * browser membenarkan playback.
-         */
+        doorScreen.style.display = "none";
+        doorScreen.style.visibility = "hidden";
+        doorScreen.style.zIndex = "-1";
 
-        startOpeningVideo();
+    }, 1900);
 
+}
 
-        /* ---------------------------------------------
-           FADE DOOR
-           --------------------------------------------- */
-
-        setTimeout(() => {
-
-            if (!doorScreen) {
-                return;
-            }
-
-            doorScreen.style.opacity = "0";
-            doorScreen.style.pointerEvents = "none";
-
-        }, 1500);
 
 
         /* ---------------------------------------------
