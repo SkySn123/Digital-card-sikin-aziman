@@ -15,9 +15,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const openingVideo =
         document.getElementById("openingVideo");
 
-    const weddingOpening =
-        document.getElementById("wedding-opening");
-
     const doorScreen =
         document.getElementById("doorScreen");
 
@@ -54,7 +51,8 @@ let invitationOpened = false;
 let musicStarted = false;
 
 let videoTimer = null;
-
+let petalsStarted = false;
+let petalTimer = null;
 
 /* =====================================================
    START MUSIC
