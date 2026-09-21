@@ -563,27 +563,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 }
 
-
-
-        /* ---------------------------------------------
-           HILANGKAN DOOR SEPENUHNYA
-           --------------------------------------------- */
-
-        setTimeout(() => {
-
-            if (!doorScreen) {
-                return;
-            }
-
-            doorScreen.style.display = "none";
-            doorScreen.style.visibility = "hidden";
-            doorScreen.style.zIndex = "-1";
-
-        }, 2100);
-
-    }
-
-
     /* =====================================================
        DOOR CLICK / TOUCH
        ===================================================== */
