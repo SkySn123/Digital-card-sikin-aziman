@@ -669,6 +669,64 @@ li {
 .intro .date {
     display: none !important;
                }
+/* =========================================================
+   SCROLL HINT — CARD PAGE 1
+   ========================================================= */
+
+.scroll-hint {
+    position: absolute;
+
+    bottom: 20px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    color: #FFFFFF;
+
+    font-family: "Playfair Display", serif;
+
+    font-size: 10px;
+
+    letter-spacing: 2px;
+
+    text-transform: uppercase;
+
+    text-shadow: 0 2px 6px rgba(0,0,0,.6);
+
+    z-index: 10;
+
+    pointer-events: none;
+
+    animation: scrollHint 2s ease-in-out infinite;
+}
+
+.scroll-hint i {
+    font-size: 18px;
+
+    margin-top: 2px;
+
+    color: #F1C75B;
+}
+
+
+@keyframes scrollHint {
+
+    0%,
+    100% {
+        transform: translateX(-50%) translateY(0);
+        opacity: .65;
+    }
+
+    50% {
+        transform: translateX(-50%) translateY(5px);
+        opacity: 1;
+    }
+
+}
 
 /* =========================================================
    INFO
