@@ -32,7 +32,6 @@ document.addEventListener("DOMContentLoaded", () => {
        SETTINGS
        ===================================================== */
 
-    const VIDEO_START = 0;
     const VIDEO_DURATION = 11000;
 
     const MAX_PETALS = 45;
