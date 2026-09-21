@@ -32,7 +32,13 @@ document.addEventListener("DOMContentLoaded", () => {
        SETTINGS
        ===================================================== */
 
+    /*
+     * Video sebenar sebaiknya dikawal oleh event "ended".
+     * Timer ini hanya fallback sekiranya browser gagal
+     * trigger event ended.
+     */
     const VIDEO_DURATION = 11000;
+    const VIDEO_FALLBACK_EXTRA = 2000;
 
     const MAX_PETALS = 45;
     const PETAL_INTERVAL = 450;
@@ -41,614 +47,604 @@ document.addEventListener("DOMContentLoaded", () => {
         new Date("2026-12-19T11:00:00+08:00");
 
 
-   /* =====================================================
-   STATE
-   ===================================================== */
+    /* =====================================================
+       STATE
+       ===================================================== */
 
-let doorOpened = false;
-let invitationOpened = false;
-let musicStarted = false;
+    let doorOpened = false;
+    let invitationOpened = false;
+    let musicStarted = false;
 
-let videoTimer = null;
-let petalsStarted = false;
-let petalTimer = null;
+    let videoTimer = null;
+    let petalsStarted = false;
+    let petalTimer = null;
 
-/* =====================================================
-   START MUSIC
-   ===================================================== */
-
-function startMusic() {
-
-    if (!audioPlayer || musicStarted) {
-        return;
-    }
-
-    /*
-     * Jangan set musicStarted = true sebelum
-     * play() berjaya. Kalau gagal, user masih
-     * boleh cuba semula.
-     */
-
-    audioPlayer.volume = 0.7;
-    audioPlayer.currentTime = 0;
-
-    const promise = audioPlayer.play();
-
-    if (promise !== undefined) {
-
-        promise
-            .then(() => {
-
-                musicStarted = true;
-
-                console.log(
-                    "🎵 Muzik berjaya dimainkan."
-                );
-
-            })
-            .catch(error => {
-
-                musicStarted = false;
-
-                console.warn(
-                    "⚠️ Muzik tidak dapat autoplay:",
-                    error
-                );
-
-            });
-
-    }
-
-}
+    let countdownTimer = null;
 
 
-/* =====================================================
-   START OPENING VIDEO
-   ===================================================== */
+    /* =====================================================
+       START MUSIC
+       ===================================================== */
 
-function startOpeningVideo() {
+    function startMusic() {
 
-    if (!videoIntro || !openingVideo) {
-
-        console.error(
-            "❌ videoIntro atau openingVideo tidak dijumpai."
-        );
-
-        showCard();
-
-        return;
-
-    }
-
-
-    console.log(
-        "🎬 Memulakan video opening..."
-    );
-
-
-    /*
-     * =================================================
-     * PAPARKAN VIDEO DULU
-     * =================================================
-     */
-
-    videoIntro.classList.remove("hide");
-
-    videoIntro.style.display = "flex";
-    videoIntro.style.opacity = "1";
-    videoIntro.style.visibility = "visible";
-    videoIntro.style.pointerEvents = "auto";
-    videoIntro.style.zIndex = "20000";
-
-
-    /*
-     * =================================================
-     * VIDEO SETTING
-     * =================================================
-     */
-
-    openingVideo.muted = true;
-    openingVideo.defaultMuted = true;
-    openingVideo.volume = 0;
-
-    openingVideo.playsInline = true;
-
-    openingVideo.setAttribute(
-        "muted",
-        ""
-    );
-
-    openingVideo.setAttribute(
-        "playsinline",
-        ""
-    );
-
-    openingVideo.setAttribute(
-        "webkit-playsinline",
-        ""
-    );
-
-    openingVideo.preload = "auto";
-    openingVideo.loop = false;
-
-
-    /*
-     * =================================================
-     * RESET VIDEO
-     * =================================================
-     */
-
-    try {
-
-        openingVideo.pause();
-
-        openingVideo.currentTime = 0;
-
-    }
-
-    catch (error) {
-
-        console.warn(
-            "⚠️ Tidak dapat reset video:",
-            error
-        );
-
-    }
-
-
-    /*
-     * =================================================
-     * PLAY VIDEO
-     * =================================================
-     */
-
-    let videoStarted = false;
-
-
-    const playVideo = () => {
-
-        if (videoStarted) {
+        if (!audioPlayer) {
             return;
         }
 
+        if (!audioPlayer.paused) {
+            musicStarted = true;
+            return;
+        }
 
-        videoStarted = true;
+        /*
+         * Jangan set musicStarted = true sebelum
+         * play() berjaya.
+         */
 
+        audioPlayer.volume = 0.7;
 
-        console.log(
-            "▶️ Cuba play video..."
-        );
+        /*
+         * Hanya reset currentTime jika muzik belum
+         * pernah berjaya dimainkan.
+         */
+        if (!musicStarted) {
+
+            try {
+                audioPlayer.currentTime = 0;
+            }
+
+            catch (error) {
+
+                console.warn(
+                    "⚠️ Tidak dapat reset audio:",
+                    error
+                );
+
+            }
+
+        }
 
 
         const playPromise =
-            openingVideo.play();
+            audioPlayer.play();
 
 
-        if (
-            playPromise !== undefined
-        ) {
+        if (playPromise !== undefined) {
 
             playPromise
                 .then(() => {
 
+                    musicStarted = true;
+
                     console.log(
-                        "✅ Video berjaya dimainkan."
+                        "🎵 Muzik berjaya dimainkan."
                     );
 
                 })
                 .catch(error => {
 
-                    console.error(
-                        "❌ Video play gagal:",
+                    musicStarted = false;
+
+                    console.warn(
+                        "⚠️ Muzik tidak dapat dimainkan:",
                         error
                     );
-
-
-                    /*
-                     * Reset supaya boleh cuba lagi.
-                     */
-
-                    videoStarted = false;
-
-
-                    /*
-                     * Cuba sekali lagi selepas
-                     * browser memberi peluang.
-                     */
-
-                    setTimeout(() => {
-
-                        openingVideo.play()
-                            .then(() => {
-
-                                console.log(
-                                    "✅ Video berjaya dimainkan pada cubaan kedua."
-                                );
-
-                            })
-                            .catch(secondError => {
-
-                                console.error(
-                                    "❌ Video masih gagal dimainkan:",
-                                    secondError
-                                );
-
-                            });
-
-                    }, 100);
 
                 });
 
         }
 
-    };
-
-
-    /*
-     * =================================================
-     * VIDEO SUDAH BOLEH DIMAINKAN
-     * =================================================
-     */
-
-    if (
-        openingVideo.readyState >= 2
-    ) {
-
-        playVideo();
-
-    }
-
-    else {
-
-        /*
-         * Tunggu video ready.
-         */
-
-        openingVideo.addEventListener(
-            "loadeddata",
-            playVideo,
-            {
-                once: true
-            }
-        );
-
-        openingVideo.addEventListener(
-            "canplay",
-            playVideo,
-            {
-                once: true
-            }
-        );
-
     }
 
 
-    /*
-     * =================================================
-     * FALLBACK
-     * =================================================
-     *
-     * Kalau browser tidak trigger loadeddata/canplay,
-     * cuba play selepas 300ms.
-     */
+    /* =====================================================
+       START OPENING VIDEO
+       ===================================================== */
 
-    setTimeout(() => {
+    function startOpeningVideo() {
 
-        if (
-            !videoStarted
-        ) {
+        if (!videoIntro || !openingVideo) {
 
-            playVideo();
-
-        }
-
-    }, 300);
-
-
-    /*
-     * =================================================
-     * MUSIC
-     * =================================================
-     */
-
-    startMusic();
-
-
-    /*
-     * =================================================
-     * VIDEO → CARD
-     * =================================================
-     */
-
-    clearTimeout(videoTimer);
-
-    videoTimer = setTimeout(
-        () => {
+            console.error(
+                "❌ videoIntro atau openingVideo tidak dijumpai."
+            );
 
             showCard();
 
-        },
-        VIDEO_DURATION
-    );
+            return;
 
-}
+        }
 
 
-/* =====================================================
-   SHOW CARD
-   ===================================================== */
-
-function showCard() {
-
-    if (invitationOpened) {
-        return;
-    }
+        console.log(
+            "🎬 Memulakan video opening..."
+        );
 
 
-    invitationOpened = true;
+        /* ---------------------------------------------
+           PAPARKAN VIDEO
+           --------------------------------------------- */
+
+        videoIntro.classList.remove("hide");
+
+        videoIntro.style.display = "flex";
+        videoIntro.style.opacity = "1";
+        videoIntro.style.visibility = "visible";
+        videoIntro.style.pointerEvents = "auto";
+        videoIntro.style.zIndex = "20000";
 
 
-    clearTimeout(videoTimer);
+        /* ---------------------------------------------
+           VIDEO SETTING
+           --------------------------------------------- */
+
+        openingVideo.muted = true;
+        openingVideo.defaultMuted = true;
+        openingVideo.volume = 0;
+
+        openingVideo.playsInline = true;
+
+        openingVideo.setAttribute(
+            "muted",
+            ""
+        );
+
+        openingVideo.setAttribute(
+            "playsinline",
+            ""
+        );
+
+        openingVideo.setAttribute(
+            "webkit-playsinline",
+            ""
+        );
+
+        openingVideo.preload = "auto";
+        openingVideo.loop = false;
 
 
-    console.log(
-        "💌 Paparkan kad jemputan."
-    );
-
-
-    /*
-     * =================================================
-     * STOP VIDEO
-     * =================================================
-     */
-
-    if (openingVideo) {
+        /* ---------------------------------------------
+           RESET VIDEO
+           --------------------------------------------- */
 
         try {
 
             openingVideo.pause();
+            openingVideo.currentTime = 0;
 
         }
 
         catch (error) {
 
             console.warn(
-                "⚠️ Video gagal dihentikan:",
+                "⚠️ Tidak dapat reset video:",
                 error
             );
 
         }
 
+
+        /* ---------------------------------------------
+           PLAY VIDEO
+           --------------------------------------------- */
+
+        let videoStarted = false;
+
+
+        const playVideo = () => {
+
+            if (
+                videoStarted ||
+                invitationOpened
+            ) {
+
+                return;
+
+            }
+
+
+            videoStarted = true;
+
+
+            console.log(
+                "▶️ Cuba play video..."
+            );
+
+
+            const playPromise =
+                openingVideo.play();
+
+
+            if (
+                playPromise !== undefined
+            ) {
+
+                playPromise
+                    .then(() => {
+
+                        console.log(
+                            "✅ Video berjaya dimainkan."
+                        );
+
+                    })
+                    .catch(error => {
+
+                        console.error(
+                            "❌ Video play gagal:",
+                            error
+                        );
+
+                        videoStarted = false;
+
+                    });
+
+            }
+
+        };
+
+
+        /* ---------------------------------------------
+           VIDEO READY
+           --------------------------------------------- */
+
+        if (
+            openingVideo.readyState >= 2
+        ) {
+
+            playVideo();
+
+        }
+
+        else {
+
+            openingVideo.addEventListener(
+                "loadeddata",
+                playVideo,
+                {
+                    once: true
+                }
+            );
+
+            openingVideo.addEventListener(
+                "canplay",
+                playVideo,
+                {
+                    once: true
+                }
+            );
+
+        }
+
+
+        /* ---------------------------------------------
+           FALLBACK PLAY
+           --------------------------------------------- */
+
+        setTimeout(() => {
+
+            if (
+                !videoStarted &&
+                !invitationOpened
+            ) {
+
+                playVideo();
+
+            }
+
+        }, 300);
+
+
+        /* ---------------------------------------------
+           START MUSIC
+           --------------------------------------------- */
+
+        startMusic();
+
+
+        /* ---------------------------------------------
+           VIDEO FALLBACK TIMER
+           --------------------------------------------- */
+
+        clearTimeout(videoTimer);
+
+        videoTimer =
+            setTimeout(() => {
+
+                if (!invitationOpened) {
+
+                    console.warn(
+                        "⚠️ Video timeout — paparkan kad."
+                    );
+
+                    showCard();
+
+                }
+
+            },
+            VIDEO_DURATION +
+            VIDEO_FALLBACK_EXTRA
+        );
+
     }
 
 
-    /*
-     * =================================================
-     * HILANGKAN VIDEO
-     * =================================================
-     */
+    /* =====================================================
+       SHOW CARD
+       ===================================================== */
 
-    if (videoIntro) {
+    function showCard() {
 
-        videoIntro.classList.add("hide");
+        if (invitationOpened) {
+            return;
+        }
 
-        videoIntro.style.display = "none";
-        videoIntro.style.opacity = "0";
-        videoIntro.style.visibility = "hidden";
-        videoIntro.style.pointerEvents = "none";
-        videoIntro.style.zIndex = "-1";
+
+        invitationOpened = true;
+
+
+        clearTimeout(videoTimer);
+
+
+        console.log(
+            "💌 Paparkan kad jemputan."
+        );
+
+
+        /* ---------------------------------------------
+           STOP VIDEO
+           --------------------------------------------- */
+
+        if (openingVideo) {
+
+            try {
+
+                openingVideo.pause();
+
+            }
+
+            catch (error) {
+
+                console.warn(
+                    "⚠️ Video gagal dihentikan:",
+                    error
+                );
+
+            }
+
+        }
+
+
+        /* ---------------------------------------------
+           HILANGKAN VIDEO
+           --------------------------------------------- */
+
+        if (videoIntro) {
+
+            videoIntro.classList.add("hide");
+
+            videoIntro.style.display = "none";
+            videoIntro.style.opacity = "0";
+            videoIntro.style.visibility = "hidden";
+            videoIntro.style.pointerEvents = "none";
+            videoIntro.style.zIndex = "-1";
+
+        }
+
+
+        /* ---------------------------------------------
+           PAPARKAN CARD
+           --------------------------------------------- */
+
+        if (card) {
+
+            card.style.display = "block";
+            card.style.visibility = "visible";
+            card.style.opacity = "1";
+            card.style.pointerEvents = "auto";
+
+            window.scrollTo({
+                top: 0,
+                behavior: "auto"
+            });
+
+        }
+
+
+        /* ---------------------------------------------
+           HILANGKAN PINTU
+           --------------------------------------------- */
+
+        if (doorScreen) {
+
+            doorScreen.classList.remove("open");
+
+            doorScreen.style.display = "none";
+            doorScreen.style.visibility = "hidden";
+            doorScreen.style.opacity = "0";
+            doorScreen.style.pointerEvents = "none";
+            doorScreen.style.zIndex = "-1";
+
+        }
+
+
+        /* ---------------------------------------------
+           ENABLE MENU
+           --------------------------------------------- */
+
+        enableBottomMenu();
+
+
+        /* ---------------------------------------------
+           REVEAL
+           --------------------------------------------- */
+
+        reveal();
+
+
+        /* ---------------------------------------------
+           PETALS
+           --------------------------------------------- */
+
+        startPetals();
 
     }
 
 
-    /*
-     * =================================================
-     * PAPARKAN CARD
-     * =================================================
-     */
+    /* =====================================================
+       OPEN DOOR
+       ===================================================== */
 
-    if (card) {
+    function openDoor() {
 
-        card.style.display = "block";
-        card.style.visibility = "visible";
-        card.style.opacity = "1";
-        card.style.pointerEvents = "auto";
-        card.style.zIndex = "1";
+        if (
+            !doorScreen ||
+            doorOpened
+        ) {
 
-        window.scrollTo({
-            top: 0,
-            behavior: "auto"
-        });
+            return;
+
+        }
+
+
+        doorOpened = true;
+
+
+        console.log(
+            "🚪 USER TEKAN PINTU"
+        );
+
+
+        /* ---------------------------------------------
+           OPEN DOOR
+           --------------------------------------------- */
+
+        doorScreen.classList.add(
+            "open"
+        );
+
+
+        /*
+         * Penting:
+         * Video dan muzik dimulakan terus daripada
+         * event click user untuk membantu mobile
+         * browser membenarkan playback.
+         */
+
+        startOpeningVideo();
+
+
+        /* ---------------------------------------------
+           FADE DOOR
+           --------------------------------------------- */
+
+        setTimeout(() => {
+
+            if (!doorScreen) {
+                return;
+            }
+
+            doorScreen.style.opacity = "0";
+            doorScreen.style.pointerEvents = "none";
+
+        }, 1500);
+
+
+        /* ---------------------------------------------
+           HILANGKAN DOOR SEPENUHNYA
+           --------------------------------------------- */
+
+        setTimeout(() => {
+
+            if (!doorScreen) {
+                return;
+            }
+
+            doorScreen.style.display = "none";
+            doorScreen.style.visibility = "hidden";
+            doorScreen.style.zIndex = "-1";
+
+        }, 2100);
 
     }
 
 
-    /*
-     * =================================================
-     * HILANGKAN PINTU
-     * =================================================
-     */
+    /* =====================================================
+       DOOR CLICK / TOUCH
+       ===================================================== */
 
     if (doorScreen) {
 
-        doorScreen.classList.remove("open");
+        doorScreen.addEventListener(
+            "click",
+            event => {
 
-        doorScreen.style.display = "none";
-        doorScreen.style.visibility = "hidden";
-        doorScreen.style.opacity = "0";
-        doorScreen.style.pointerEvents = "none";
-        doorScreen.style.zIndex = "-1";
+                event.preventDefault();
+                event.stopPropagation();
 
-    }
+                openDoor();
 
-
-    /*
-     * =================================================
-     * MENU
-     * =================================================
-     */
-
-    enableBottomMenu();
-
-
-    /*
-     * =================================================
-     * REVEAL
-     * =================================================
-     */
-
-    reveal();
-
-
-    /*
-     * =================================================
-     * PETALS
-     * =================================================
-     */
-
-    startPetals();
-
-}
-
-
-/* =====================================================
-   OPEN DOOR
-   ===================================================== */
-
-function openDoor() {
-
-    if (
-        !doorScreen ||
-        doorOpened
-    ) {
-
-        return;
+            },
+            {
+                passive: false
+            }
+        );
 
     }
 
 
-    /*
-     * =================================================
-     * LOCK BUTTON
-     * =================================================
-     */
+    /* =====================================================
+       VIDEO ENDED
+       ===================================================== */
 
-    doorOpened = true;
+    if (openingVideo) {
 
+        openingVideo.addEventListener(
+            "ended",
+            () => {
 
-    console.log(
-        "🚪 USER TEKAN PINTU"
-    );
+                console.log(
+                    "🎬 Video telah tamat."
+                );
 
+                showCard();
 
-    /*
-     * =================================================
-     * PENTING:
-     *
-     * TAMBAH .open DAHULU
-     * =================================================
-     */
-
-    doorScreen.classList.add(
-        "open"
-    );
+            }
+        );
 
 
-    /*
-     * =================================================
-     * START VIDEO DALAM EVENT CLICK
-     *
-     * Ini penting untuk mobile browser.
-     * =================================================
-     */
+        /* ---------------------------------------------
+           VIDEO ERROR
+           --------------------------------------------- */
 
-    startOpeningVideo();
+        openingVideo.addEventListener(
+            "error",
+            event => {
 
-
-    /*
-     * =================================================
-     * FADE PINTU
-     * =================================================
-     */
-
-    setTimeout(() => {
-
-        if (!doorScreen) {
-            return;
-        }
-
-        doorScreen.style.opacity = "0";
-        doorScreen.style.pointerEvents = "none";
-
-    }, 1500);
+                console.error(
+                    "❌ Video error:",
+                    event
+                );
 
 
-    /*
-     * =================================================
-     * HILANGKAN PINTU SEPENUHNYA
-     * =================================================
-     */
+                /*
+                 * Jangan biarkan user tersekat pada
+                 * opening screen jika video rosak.
+                 */
 
-    setTimeout(() => {
+                setTimeout(() => {
 
-        if (!doorScreen) {
-            return;
-        }
+                    if (!invitationOpened) {
+                        showCard();
+                    }
 
+                }, 500);
 
-        doorScreen.style.display = "none";
-        doorScreen.style.visibility = "hidden";
-        doorScreen.style.zIndex = "-1";
+            }
+        );
 
-    }, 2100);
+    }
 
-}
-
-
-/* =====================================================
-   DOOR CLICK / TOUCH
-   ===================================================== */
-
-if (doorScreen) {
-
-    doorScreen.addEventListener(
-        "click",
-        event => {
-
-            event.preventDefault();
-            event.stopPropagation();
-
-            openDoor();
-
-        },
-        {
-            passive: false
-        }
-    );
-
-}
-
-
-/* =====================================================
-   VIDEO ENDED
-   ===================================================== */
-
-if (openingVideo) {
-
-    openingVideo.addEventListener(
-        "ended",
-        () => {
-
-            console.log(
-                "🎬 Video telah tamat."
-            );
-
-            showCard();
-
-        }
-    );
-
-}
 
     /* =====================================================
        ENABLE BOTTOM MENU
@@ -696,23 +692,6 @@ if (openingVideo) {
                 }
             );
 
-
-        document
-            .querySelectorAll(
-                ".toggle-menu"
-            )
-            .forEach(
-                menu => {
-
-                    menu.style.pointerEvents =
-                        "none";
-
-                    menu.style.zIndex =
-                        "13000";
-
-                }
-            );
-
     }
 
 
@@ -731,7 +710,9 @@ if (openingVideo) {
             petalContainer.childElementCount >=
             MAX_PETALS
         ) {
+
             return;
+
         }
 
 
@@ -751,7 +732,8 @@ if (openingVideo) {
 
 
         const size =
-            5 + Math.random() * 9;
+            5 +
+            Math.random() * 9;
 
 
         petal.style.width =
@@ -762,11 +744,13 @@ if (openingVideo) {
 
 
         petal.style.opacity =
-            0.3 + Math.random() * 0.5;
+            0.3 +
+            Math.random() * 0.5;
 
 
         const duration =
-            5 + Math.random() * 4;
+            5 +
+            Math.random() * 4;
 
 
         petal.style.animationDuration =
@@ -775,13 +759,19 @@ if (openingVideo) {
 
         petal.style.setProperty(
             "--translate-x",
-            (Math.random() * 300 - 150) + "px"
+            (
+                Math.random() * 300 -
+                150
+            ) + "px"
         );
 
 
         petal.style.setProperty(
             "--translate-y",
-            (350 + Math.random() * 250) + "px"
+            (
+                350 +
+                Math.random() * 250
+            ) + "px"
         );
 
 
@@ -808,7 +798,9 @@ if (openingVideo) {
             petalsStarted ||
             !petalContainer
         ) {
+
             return;
+
         }
 
 
@@ -885,9 +877,7 @@ if (openingVideo) {
 
 
             if (gap < 0) {
-
                 gap = 0;
-
             }
 
 
@@ -968,10 +958,11 @@ if (openingVideo) {
         updateCountdown();
 
 
-        setInterval(
-            updateCountdown,
-            1000
-        );
+        countdownTimer =
+            setInterval(
+                updateCountdown,
+                1000
+            );
 
     }
 
@@ -987,6 +978,13 @@ if (openingVideo) {
 
         title:
             "Majlis Perkahwinan Sikin & Aziman",
+
+        /*
+         * UTC
+         *
+         * 03:00 UTC = 11:00 pagi Malaysia
+         * 08:00 UTC = 04:00 petang Malaysia
+         */
 
         startDate:
             "20261219T030000Z",
@@ -1045,7 +1043,7 @@ if (openingVideo) {
 
 
     /* =====================================================
-       APPLE CALENDAR / ICS
+       ICS HELPERS
        ===================================================== */
 
     function escapeICSText(text) {
@@ -1084,9 +1082,10 @@ if (openingVideo) {
             "PRODID:-//Sikin & Aziman//Wedding//MS",
             "CALSCALE:GREGORIAN",
             "METHOD:PUBLISH",
+
             "BEGIN:VEVENT",
 
-            "UID:sikin-aziman-wedding-2026@example.com",
+            "UID:sikin-aziman-wedding-2026@wedding",
 
             "DTSTAMP:" +
             now,
@@ -1113,12 +1112,17 @@ if (openingVideo) {
             ),
 
             "END:VEVENT",
+
             "END:VCALENDAR"
 
         ].join("\r\n");
 
     }
 
+
+    /* =====================================================
+       APPLE CALENDAR / ICS
+       ===================================================== */
 
     function addAppleCalendar() {
 
@@ -1460,7 +1464,6 @@ if (openingVideo) {
 
     /* =====================================================
        BOTTOM MENU BUTTONS
-       GUNA CLICK SAHAJA
        ===================================================== */
 
     Object.entries(
@@ -1487,7 +1490,8 @@ if (openingVideo) {
             }
 
 
-            const handleMenuClick =
+            button.addEventListener(
+                "click",
                 event => {
 
                     event.preventDefault();
@@ -1519,12 +1523,7 @@ if (openingVideo) {
 
                     }
 
-                };
-
-
-            button.addEventListener(
-                "click",
-                handleMenuClick
+                }
             );
 
         }
@@ -1819,8 +1818,18 @@ if (openingVideo) {
     async function submitAttendance(
         endpoint,
         successMessage,
-        icon
+        icon,
+        button
     ) {
+
+        /*
+         * Elak user tekan button berkali-kali.
+         */
+
+        if (button) {
+            button.disabled = true;
+        }
+
 
         try {
 
@@ -1887,6 +1896,15 @@ if (openingVideo) {
                 "Maaf, terdapat masalah ketika menghantar kehadiran. Sila cuba lagi."
             );
 
+
+            /*
+             * Hanya enable semula jika request gagal.
+             */
+
+            if (button) {
+                button.disabled = false;
+            }
+
         }
 
     }
@@ -1915,7 +1933,8 @@ if (openingVideo) {
                 submitAttendance(
                     "count_hadir.php",
                     "Kami menantikan kedatangan anda!",
-                    "bx bxs-wink-smile"
+                    "bx bxs-wink-smile",
+                    btnHadir
                 );
 
             }
@@ -1947,7 +1966,8 @@ if (openingVideo) {
                 submitAttendance(
                     "count_tidak_hadir.php",
                     "Terima kasih kerana memaklumkan kepada kami.",
-                    "bx bxs-sad"
+                    "bx bxs-sad",
+                    btnTidakHadir
                 );
 
             }
@@ -1971,9 +1991,46 @@ if (openingVideo) {
         audioPlayer
     ) {
 
+        /*
+         * MUSIC BUTTON = PLAY / PAUSE
+         */
+
+        musicButton.addEventListener(
+            "click",
+            event => {
+
+                event.preventDefault();
+                event.stopPropagation();
+
+
+                if (
+                    audioPlayer.paused
+                ) {
+
+                    startMusic();
+
+                }
+
+                else {
+
+                    audioPlayer.pause();
+
+                }
+
+            }
+        );
+
+
+        /* ---------------------------------------------
+           AUDIO PLAY EVENT
+           --------------------------------------------- */
+
         audioPlayer.addEventListener(
             "play",
             () => {
+
+                musicStarted = true;
+
 
                 const icon =
                     musicButton.querySelector(
@@ -1997,6 +2054,10 @@ if (openingVideo) {
         );
 
 
+        /* ---------------------------------------------
+           AUDIO PAUSE EVENT
+           --------------------------------------------- */
+
         audioPlayer.addEventListener(
             "pause",
             () => {
@@ -2018,6 +2079,23 @@ if (openingVideo) {
                     );
 
                 }
+
+            }
+        );
+
+
+        /* ---------------------------------------------
+           AUDIO ERROR
+           --------------------------------------------- */
+
+        audioPlayer.addEventListener(
+            "error",
+            event => {
+
+                console.error(
+                    "❌ Audio error:",
+                    event
+                );
 
             }
         );
@@ -2046,5 +2124,22 @@ if (openingVideo) {
 
     window.makePhoneCall =
         makePhoneCall;
+
+
+    /* =====================================================
+       INITIAL STATE
+       ===================================================== */
+
+    /*
+     * Pastikan menu overlay tidak menghalang page
+     * sebelum dibuka.
+     */
+
+    closeAllMenus();
+
+
+    console.log(
+        "💍 Sikin & Aziman Wedding Invitation JS loaded."
+    );
 
 });
