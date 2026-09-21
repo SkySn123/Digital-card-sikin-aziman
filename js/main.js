@@ -45,257 +45,48 @@ document.addEventListener("DOMContentLoaded", () => {
         new Date("2026-12-19T11:00:00+08:00");
 
 
-/* =====================================================
-   STATE
-   ===================================================== */
+    /* =====================================================
+       STATE
+       ===================================================== */
 
-let doorOpened = false;
-let invitationOpened = false;
+    let doorOpened = false;
+    let invitationOpened = false;
 
-let musicStarted = false;
+    let musicStarted = false;
 
-let petalsStarted = false;
-let petalTimer = null;
-
-
-/* =====================================================
-   INITIAL STATE
-   FLOW:
-   1. PINTU PAPAR
-   2. USER TEKAN
-   3. PINTU BUKA
-   4. VIDEO MAIN
-   5. VIDEO 11 SAAT
-   6. CARD PAPAR
-   ===================================================== */
+    let petalsStarted = false;
+    let petalTimer = null;
 
 
-/* =====================================================
-   CARD — SEMBUNYIKAN DAHULU
-   ===================================================== */
-
-if (card) {
-
-    card.style.display = "none";
-    card.style.visibility = "hidden";
-    card.style.opacity = "0";
-    card.style.pointerEvents = "none";
-
-}
+    /* =====================================================
+       INITIAL STATE
+       FLOW:
+       1. PINTU PAPAR
+       2. USER TEKAN
+       3. PINTU BUKA
+       4. VIDEO MAIN
+       5. VIDEO 11 SAAT
+       6. CARD PAPAR
+       ===================================================== */
 
 
-/* =====================================================
-   VIDEO — SEMBUNYIKAN DAHULU
-   ===================================================== */
+    /* =====================================================
+       CARD — SEMBUNYIKAN DAHULU
+       ===================================================== */
 
-if (videoIntro) {
+    if (card) {
 
-    videoIntro.classList.add("hide");
-
-    videoIntro.style.display = "none";
-    videoIntro.style.opacity = "0";
-    videoIntro.style.visibility = "hidden";
-    videoIntro.style.pointerEvents = "none";
-    videoIntro.style.zIndex = "-1";
-
-}
-
-
-/* =====================================================
-   OPENING LAMA — TAK DIGUNAKAN
-   ===================================================== */
-
-if (weddingOpening) {
-
-    weddingOpening.classList.add("opening-hide");
-
-    weddingOpening.style.display = "none";
-    weddingOpening.style.opacity = "0";
-    weddingOpening.style.visibility = "hidden";
-    weddingOpening.style.pointerEvents = "none";
-    weddingOpening.style.zIndex = "-1";
-
-}
-
-
-/* =====================================================
-   PINTU — PAPAR PERTAMA
-   ===================================================== */
-
-if (doorScreen) {
-
-    doorScreen.classList.remove("open");
-
-    doorScreen.style.display = "flex";
-    doorScreen.style.visibility = "visible";
-    doorScreen.style.opacity = "1";
-    doorScreen.style.pointerEvents = "auto";
-    doorScreen.style.zIndex = "30000";
-
-}
-
-
-/* =====================================================
-   START VIDEO
-   ===================================================== */
-
-function startOpeningVideo() {
-
-    if (!videoIntro || !openingVideo) {
-
-        showCard();
-
-        return;
+        card.style.display = "none";
+        card.style.visibility = "hidden";
+        card.style.opacity = "0";
+        card.style.pointerEvents = "none";
 
     }
 
 
-    /* =================================================
-       PAPARKAN VIDEO
-       ================================================= */
-
-    videoIntro.classList.remove("hide");
-
-    videoIntro.style.display = "flex";
-    videoIntro.style.opacity = "1";
-    videoIntro.style.visibility = "visible";
-    videoIntro.style.pointerEvents = "auto";
-    videoIntro.style.zIndex = "20000";
-
-
-    /* =================================================
-       VIDEO SETTING
-       ================================================= */
-
-    openingVideo.muted = true;
-    openingVideo.playsInline = true;
-    openingVideo.loop = false;
-
-
-    try {
-
-        openingVideo.currentTime = VIDEO_START;
-
-    }
-
-    catch (error) {
-
-        console.log(
-            "Tidak dapat set video ke 0:",
-            error
-        );
-
-    }
-
-
-    /* =================================================
-       PLAY VIDEO
-       ================================================= */
-
-    const playVideo = () => {
-
-        openingVideo.play()
-            .then(() => {
-
-                console.log(
-                    "🎬 Video intro dimainkan."
-                );
-
-            })
-            .catch(error => {
-
-                console.log(
-                    "Video tidak dapat autoplay:",
-                    error
-                );
-
-            });
-
-    };
-
-
-    if (openingVideo.readyState >= 2) {
-
-        playVideo();
-
-    }
-
-    else {
-
-        openingVideo.addEventListener(
-            "loadeddata",
-            playVideo,
-            {
-                once: true
-            }
-        );
-
-    }
-
-
-    /* =================================================
-       MUSIC
-       ================================================= */
-
-    startMusic();
-
-
-    /* =================================================
-       VIDEO → CARD
-       SELEPAS 11 SAAT
-       ================================================= */
-
-    setTimeout(
-        showCard,
-        VIDEO_DURATION
-    );
-
-}
-
-
-/* =====================================================
-   SHOW CARD
-   ===================================================== */
-
-function showCard() {
-
-    if (invitationOpened) {
-
-        return;
-
-    }
-
-
-    invitationOpened = true;
-
-
-    /* =================================================
-       STOP VIDEO
-       ================================================= */
-
-    if (openingVideo) {
-
-        try {
-
-            openingVideo.pause();
-
-        }
-
-        catch (error) {
-
-            console.log(
-                "Video gagal dihentikan:",
-                error
-            );
-
-        }
-
-    }
-
-
-    /* =================================================
-       HILANGKAN VIDEO
-       ================================================= */
+    /* =====================================================
+       VIDEO — SEMBUNYIKAN DAHULU
+       ===================================================== */
 
     if (videoIntro) {
 
@@ -310,189 +101,458 @@ function showCard() {
     }
 
 
-    /* =================================================
-       PAPARKAN CARD
-       ================================================= */
+    /* =====================================================
+       OPENING LAMA — TAK DIGUNAKAN
+       ===================================================== */
 
-    if (card) {
+    if (weddingOpening) {
 
-        card.style.display = "block";
-        card.style.visibility = "visible";
-        card.style.opacity = "1";
-        card.style.pointerEvents = "auto";
-        card.style.zIndex = "1";
+        weddingOpening.classList.add("opening-hide");
 
-        window.scrollTo({
-            top: 0,
-            behavior: "auto"
-        });
+        weddingOpening.style.display = "none";
+        weddingOpening.style.opacity = "0";
+        weddingOpening.style.visibility = "hidden";
+        weddingOpening.style.pointerEvents = "none";
+        weddingOpening.style.zIndex = "-1";
 
     }
 
 
-    /* =================================================
-       PASTIKAN PINTU HILANG
-       ================================================= */
+    /* =====================================================
+       PINTU — PAPAR PERTAMA
+       ===================================================== */
 
     if (doorScreen) {
 
         doorScreen.classList.remove("open");
 
-        doorScreen.style.display = "none";
-        doorScreen.style.visibility = "hidden";
-        doorScreen.style.opacity = "0";
-        doorScreen.style.pointerEvents = "none";
-        doorScreen.style.zIndex = "-1";
+        doorScreen.style.display = "flex";
+        doorScreen.style.visibility = "visible";
+        doorScreen.style.opacity = "1";
+        doorScreen.style.pointerEvents = "auto";
+        doorScreen.style.zIndex = "30000";
 
     }
 
 
-    /* =================================================
-       ENABLE MENU
-       ================================================= */
+    /* =====================================================
+       START VIDEO
+       ===================================================== */
 
-    enableBottomMenu();
+    function startOpeningVideo() {
 
+        if (!videoIntro || !openingVideo) {
 
-    /* =================================================
-       REVEAL
-       ================================================= */
+            console.error(
+                "❌ Video intro atau openingVideo tidak dijumpai."
+            );
 
-    reveal();
-
-
-    /* =================================================
-       PETALS
-       ================================================= */
-
-    startPetals();
-
-}
-
-
-/* =====================================================
-   OPEN DOOR
-   USER TEKAN PINTU
-   ===================================================== */
-
-function openDoor() {
-
-    if (
-        !doorScreen ||
-        doorOpened
-    ) {
-
-        return;
-
-    }
-
-
-    doorOpened = true;
-
-
-    console.log(
-        "🚪 Pintu dibuka."
-    );
-
-
-    /* =================================================
-       DOUBLE DOOR OPEN
-       ================================================= */
-
-    doorScreen.classList.add("open");
-
-
-    /* =================================================
-       TUNGGU ANIMASI PINTU
-       CSS = 1.8 SAAT
-       ================================================= */
-
-    setTimeout(() => {
-
-        if (!doorScreen) {
-
-            startOpeningVideo();
+            showCard();
 
             return;
 
         }
 
 
-        /* ---------------------------------------------
+        /* =================================================
+           PAPARKAN VIDEO
+           ================================================= */
+
+        videoIntro.classList.remove("hide");
+
+        videoIntro.style.display = "flex";
+        videoIntro.style.opacity = "1";
+        videoIntro.style.visibility = "visible";
+        videoIntro.style.pointerEvents = "auto";
+        videoIntro.style.zIndex = "20000";
+
+
+        /* =================================================
+           VIDEO SETTING
+           ================================================= */
+
+        openingVideo.pause();
+
+        openingVideo.muted = true;
+        openingVideo.defaultMuted = true;
+        openingVideo.playsInline = true;
+
+        openingVideo.setAttribute(
+            "muted",
+            ""
+        );
+
+        openingVideo.setAttribute(
+            "playsinline",
+            ""
+        );
+
+        openingVideo.setAttribute(
+            "webkit-playsinline",
+            ""
+        );
+
+        openingVideo.loop = false;
+        openingVideo.preload = "auto";
+
+
+        /* =================================================
+           RESET VIDEO KE 0
+           ================================================= */
+
+        try {
+
+            openingVideo.currentTime =
+                VIDEO_START;
+
+        }
+
+        catch (error) {
+
+            console.warn(
+                "Tidak dapat set video ke 0:",
+                error
+            );
+
+        }
+
+
+        /* =================================================
+           PLAY VIDEO
+           ================================================= */
+
+        const playVideo = () => {
+
+            openingVideo
+                .play()
+                .then(() => {
+
+                    console.log(
+                        "🎬 Video intro berjaya dimainkan."
+                    );
+
+                })
+                .catch(error => {
+
+                    console.error(
+                        "❌ Video gagal dimainkan:",
+                        error
+                    );
+
+                });
+
+        };
+
+
+        /*
+         * Jika video sudah ready,
+         * terus main.
+         */
+
+        if (
+            openingVideo.readyState >= 2
+        ) {
+
+            playVideo();
+
+        }
+
+        /*
+         * Jika belum ready,
+         * tunggu canplay.
+         */
+
+        else {
+
+            openingVideo.addEventListener(
+                "canplay",
+                playVideo,
+                {
+                    once: true
+                }
+            );
+
+        }
+
+
+        /* =================================================
+           MUSIC
+           ================================================= */
+
+        startMusic();
+
+
+        /* =================================================
+           VIDEO → CARD
+           SELEPAS 11 SAAT
+           ================================================= */
+
+        setTimeout(
+            showCard,
+            VIDEO_DURATION
+        );
+
+    }
+
+
+    /* =====================================================
+       SHOW CARD
+       ===================================================== */
+
+    function showCard() {
+
+        if (invitationOpened) {
+
+            return;
+
+        }
+
+
+        invitationOpened = true;
+
+
+        /* =================================================
+           STOP VIDEO
+           ================================================= */
+
+        if (openingVideo) {
+
+            try {
+
+                openingVideo.pause();
+
+            }
+
+            catch (error) {
+
+                console.log(
+                    "Video gagal dihentikan:",
+                    error
+                );
+
+            }
+
+        }
+
+
+        /* =================================================
+           HILANGKAN VIDEO
+           ================================================= */
+
+        if (videoIntro) {
+
+            videoIntro.classList.add("hide");
+
+            videoIntro.style.display = "none";
+            videoIntro.style.opacity = "0";
+            videoIntro.style.visibility = "hidden";
+            videoIntro.style.pointerEvents = "none";
+            videoIntro.style.zIndex = "-1";
+
+        }
+
+
+        /* =================================================
+           PAPARKAN CARD
+           ================================================= */
+
+        if (card) {
+
+            card.style.display = "block";
+            card.style.visibility = "visible";
+            card.style.opacity = "1";
+            card.style.pointerEvents = "auto";
+            card.style.zIndex = "1";
+
+            window.scrollTo({
+                top: 0,
+                behavior: "auto"
+            });
+
+        }
+
+
+        /* =================================================
+           PASTIKAN PINTU HILANG
+           ================================================= */
+
+        if (doorScreen) {
+
+            doorScreen.classList.remove("open");
+
+            doorScreen.style.display = "none";
+            doorScreen.style.visibility = "hidden";
+            doorScreen.style.opacity = "0";
+            doorScreen.style.pointerEvents = "none";
+            doorScreen.style.zIndex = "-1";
+
+        }
+
+
+        /* =================================================
+           ENABLE MENU
+           ================================================= */
+
+        enableBottomMenu();
+
+
+        /* =================================================
+           REVEAL
+           ================================================= */
+
+        reveal();
+
+
+        /* =================================================
+           PETALS
+           ================================================= */
+
+        startPetals();
+
+    }
+
+
+    /* =====================================================
+       OPEN DOOR
+       USER TEKAN PINTU
+       ===================================================== */
+
+    function openDoor() {
+
+        if (
+            !doorScreen ||
+            doorOpened
+        ) {
+
+            return;
+
+        }
+
+
+        doorOpened = true;
+
+
+        console.log(
+            "🚪 Pintu dibuka."
+        );
+
+
+        /*
+         * =================================================
+         * PENTING:
+         *
+         * VIDEO DIMULAKAN TERUS DALAM EVENT CLICK.
+         *
+         * Ini mengelakkan browser/mobile block autoplay
+         * kerana video masih berkait dengan user interaction.
+         * =================================================
+         */
+
+        startOpeningVideo();
+
+
+        /* =================================================
+           DOUBLE DOOR OPEN
+           ================================================= */
+
+        doorScreen.classList.add("open");
+
+
+        /* =================================================
            FADE PINTU
-           --------------------------------------------- */
-
-        doorScreen.style.opacity = "0";
-        doorScreen.style.pointerEvents = "none";
-
-
-        /* ---------------------------------------------
-           SELEPAS FADE → HILANGKAN PINTU
-           --------------------------------------------- */
+           CSS = 1.8 SAAT
+           ================================================= */
 
         setTimeout(() => {
+
+            if (!doorScreen) {
+
+                return;
+
+            }
+
+
+            /* ---------------------------------------------
+               FADE PINTU
+               --------------------------------------------- */
+
+            doorScreen.style.opacity = "0";
+            doorScreen.style.pointerEvents = "none";
+
+
+        }, 1500);
+
+
+        /* =================================================
+           HILANGKAN PINTU SEPENUHNYA
+           ================================================= */
+
+        setTimeout(() => {
+
+            if (!doorScreen) {
+
+                return;
+
+            }
+
 
             doorScreen.style.display = "none";
             doorScreen.style.visibility = "hidden";
             doorScreen.style.zIndex = "-1";
 
 
-            /* -----------------------------------------
-               BARU VIDEO MAIN
-               ----------------------------------------- */
+        }, 2100);
 
-            startOpeningVideo();
-
-        }, 300);
-
-    }, 1800);
-
-}
+    }
 
 
-/* =====================================================
-   DOOR CLICK / TOUCH
-   ===================================================== */
+    /* =====================================================
+       DOOR CLICK / TOUCH
+       ===================================================== */
 
-if (doorScreen) {
+    if (doorScreen) {
 
-    doorScreen.addEventListener(
-        "click",
-        event => {
+        doorScreen.addEventListener(
+            "click",
+            event => {
 
-            event.preventDefault();
-            event.stopPropagation();
+                event.preventDefault();
+                event.stopPropagation();
 
-            openDoor();
+                openDoor();
 
-        }
-    );
+            }
+        );
 
-}
+    }
 
 
-/* =====================================================
-   VIDEO EVENT
-   EXTRA SAFETY
-   ===================================================== */
+    /* =====================================================
+       VIDEO EVENT
+       EXTRA SAFETY
+       ===================================================== */
 
-if (openingVideo) {
+    if (openingVideo) {
 
-    openingVideo.addEventListener(
-        "ended",
-        () => {
+        openingVideo.addEventListener(
+            "ended",
+            () => {
 
-            /*
-             * Kalau video habis sebelum
-             * 11 saat, terus paparkan card.
-             */
+                /*
+                 * Kalau video habis sebelum
+                 * 11 saat, terus paparkan card.
+                 */
 
-            showCard();
+                console.log(
+                    "🎬 Video telah tamat."
+                );
 
-        }
-    );
+                showCard();
 
-}
+            }
+        );
+
+    }
 
 
 
