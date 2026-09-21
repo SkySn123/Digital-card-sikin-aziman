@@ -57,6 +57,31 @@ document.addEventListener("DOMContentLoaded", () => {
     let petalsStarted = false;
     let petalTimer = null;
 
+function startMusic() {
+
+    if (!audioPlayer || musicStarted) {
+        return;
+    }
+
+    musicStarted = true;
+
+    audioPlayer.volume = 0.7;
+
+    audioPlayer.currentTime = 0;
+
+    audioPlayer.play()
+        .then(() => {
+            console.log("🎵 Muzik berjaya dimainkan.");
+        })
+        .catch(error => {
+            console.error(
+                "❌ Muzik gagal dimainkan:",
+                error
+            );
+
+            musicStarted = false;
+        });
+}
 
     /* =====================================================
        INITIAL STATE
