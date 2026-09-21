@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
             } catch (error) {
 
                 console.warn(
-                    "⚠️ Tidak dapat reset audio:",
+                    "Tidak dapat reset audio:",
                     error
                 );
 
@@ -89,9 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const playPromise =
             audioPlayer.play();
 
-        if (
-            playPromise !== undefined
-        ) {
+        if (playPromise !== undefined) {
 
             playPromise
                 .then(() => {
@@ -99,7 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     musicStarted = true;
 
                     console.log(
-                        "🎵 Muzik berjaya dimainkan."
+                        "Muzik berjaya dimainkan."
                     );
 
                 })
@@ -108,7 +106,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     musicStarted = false;
 
                     console.warn(
-                        "⚠️ Muzik tidak dapat dimainkan:",
+                        "Muzik tidak dapat dimainkan:",
                         error
                     );
 
@@ -210,38 +208,31 @@ document.addEventListener("DOMContentLoaded", () => {
         ) {
 
             console.error(
-                "❌ videoIntro atau openingVideo tidak dijumpai."
+                "videoIntro atau openingVideo tidak dijumpai."
             );
 
             showCard();
 
             return false;
-
         }
 
 
         console.log(
-            "🎬 Memulakan video opening..."
+            "Memulakan video opening..."
         );
 
 
-        /* ---------------------------------------------
-           PAPARKAN VIDEO LAYER DAHULU
-           --------------------------------------------- */
+        /* PAPARKAN VIDEO */
 
         showVideoLayer();
 
 
-        /* ---------------------------------------------
-           PREPARE VIDEO
-           --------------------------------------------- */
+        /* PREPARE VIDEO */
 
         prepareOpeningVideo();
 
 
-        /* ---------------------------------------------
-           RESET VIDEO
-           --------------------------------------------- */
+        /* RESET VIDEO */
 
         try {
 
@@ -249,27 +240,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
             openingVideo.currentTime = 0;
 
-        }
-
-        catch (error) {
+        } catch (error) {
 
             console.warn(
-                "⚠️ Tidak dapat reset video:",
+                "Tidak dapat reset video:",
                 error
             );
 
         }
 
 
-        /* ---------------------------------------------
-           PLAY VIDEO
-           --------------------------------------------- */
+        /* PLAY VIDEO */
 
         try {
 
             const playPromise =
                 openingVideo.play();
-
 
             if (
                 playPromise !== undefined
@@ -279,28 +265,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
             }
 
-
             console.log(
-                "✅ Video sudah mula dimainkan."
+                "Video sudah mula dimainkan."
             );
-
 
             return true;
 
-        }
-
-        catch (error) {
+        } catch (error) {
 
             console.error(
-                "❌ Video play gagal:",
+                "Video play gagal:",
                 error
             );
 
 
-            /*
-             * Jika browser belum ready,
-             * cuba sekali lagi selepas canplay.
-             */
+            /* RETRY */
 
             return new Promise(resolve => {
 
@@ -332,17 +311,15 @@ document.addEventListener("DOMContentLoaded", () => {
                         cleanup();
 
                         console.log(
-                            "✅ Video berjaya dimainkan selepas canplay."
+                            "Video berjaya dimainkan selepas canplay."
                         );
 
                         resolve(true);
 
-                    }
-
-                    catch (retryError) {
+                    } catch (retryError) {
 
                         console.error(
-                            "❌ Retry video gagal:",
+                            "Retry video gagal:",
                             retryError
                         );
 
@@ -366,10 +343,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 );
 
 
-                /*
-                 * Fallback sekiranya event canplay
-                 * tidak dipanggil.
-                 */
+                /* FALLBACK */
 
                 setTimeout(
                     async () => {
@@ -387,17 +361,15 @@ document.addEventListener("DOMContentLoaded", () => {
                             cleanup();
 
                             console.log(
-                                "✅ Video berjaya dimainkan melalui fallback."
+                                "Video berjaya dimainkan melalui fallback."
                             );
 
                             resolve(true);
 
-                        }
-
-                        catch (fallbackError) {
+                        } catch (fallbackError) {
 
                             console.error(
-                                "❌ Fallback video gagal:",
+                                "Fallback video gagal:",
                                 fallbackError
                             );
 
@@ -430,18 +402,15 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-
         invitationOpened = true;
 
 
         console.log(
-            "💌 Paparkan kad jemputan."
+            "Paparkan kad jemputan."
         );
 
 
-        /* ---------------------------------------------
-           STOP VIDEO
-           --------------------------------------------- */
+        /* STOP VIDEO */
 
         if (openingVideo) {
 
@@ -449,12 +418,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 openingVideo.pause();
 
-            }
-
-            catch (error) {
+            } catch (error) {
 
                 console.warn(
-                    "⚠️ Video gagal dihentikan:",
+                    "Video gagal dihentikan:",
                     error
                 );
 
@@ -463,16 +430,12 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
 
-        /* ---------------------------------------------
-           HILANGKAN VIDEO
-           --------------------------------------------- */
+        /* HIDE VIDEO */
 
         hideVideoLayer();
 
 
-        /* ---------------------------------------------
-           PAPARKAN CARD
-           --------------------------------------------- */
+        /* SHOW CARD */
 
         if (card) {
 
@@ -489,9 +452,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
 
-        /* ---------------------------------------------
-           HILANGKAN PINTU
-           --------------------------------------------- */
+        /* HIDE DOOR */
 
         if (doorScreen) {
 
@@ -506,23 +467,17 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
 
-        /* ---------------------------------------------
-           ENABLE MENU
-           --------------------------------------------- */
+        /* ENABLE MENU */
 
         enableBottomMenu();
 
 
-        /* ---------------------------------------------
-           REVEAL
-           --------------------------------------------- */
+        /* REVEAL */
 
         reveal();
 
 
-        /* ---------------------------------------------
-           PETALS
-           --------------------------------------------- */
+        /* PETALS */
 
         startPetals();
 
@@ -549,27 +504,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
         console.log(
-            "🚪 USER TEKAN PINTU"
+            "USER TEKAN PINTU"
         );
 
 
-        /* =================================================
-           1. VIDEO MUNCUL DAHULU
-           ================================================= */
+        /* VIDEO MUNCUL DAHULU */
 
         const videoStarted =
             await startOpeningVideo();
 
 
-        /*
-         * Jika video gagal dimainkan,
-         * jangan teruskan animation pintu.
-         */
-
         if (!videoStarted) {
 
             console.error(
-                "❌ Video tidak dapat dimulakan."
+                "Video tidak dapat dimulakan."
             );
 
             showCard();
@@ -579,25 +527,19 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
 
-        /* =================================================
-           2. MULAKAN MUSIC
-           ================================================= */
+        /* MUSIC */
 
         startMusic();
 
 
-        /* =================================================
-           3. BARU BUKA PINTU
-           ================================================= */
+        /* OPEN DOOR */
 
         doorScreen.classList.add(
             "open"
         );
 
 
-        /* =================================================
-           4. FADE DOOR
-           ================================================= */
+        /* FADE DOOR */
 
         setTimeout(() => {
 
@@ -611,9 +553,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 100);
 
 
-        /* =================================================
-           5. BUANG DOOR
-           ================================================= */
+        /* REMOVE DOOR */
 
         setTimeout(() => {
 
@@ -665,7 +605,7 @@ document.addEventListener("DOMContentLoaded", () => {
             () => {
 
                 console.log(
-                    "🎬 Video telah tamat."
+                    "Video telah tamat."
                 );
 
                 showCard();
@@ -674,19 +614,16 @@ document.addEventListener("DOMContentLoaded", () => {
         );
 
 
-        /* ---------------------------------------------
-           VIDEO ERROR
-           --------------------------------------------- */
+        /* VIDEO ERROR */
 
         openingVideo.addEventListener(
             "error",
             event => {
 
                 console.error(
-                    "❌ Video error:",
+                    "Video error:",
                     event
                 );
-
 
                 if (!invitationOpened) {
 
@@ -866,9 +803,7 @@ document.addEventListener("DOMContentLoaded", () => {
         petalsStarted = true;
 
 
-        /* -----------------------------------------
-           PETALS AWAL
-           ----------------------------------------- */
+        /* PETALS AWAL */
 
         for (
             let i = 0;
@@ -884,9 +819,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
 
-        /* -----------------------------------------
-           PETALS BERTERUSAN
-           ----------------------------------------- */
+        /* PETALS BERTERUSAN */
 
         petalTimer =
             setInterval(
@@ -1888,73 +1821,103 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* =====================================================
-       RSVP
+       RSVP — SUBMIT ATTENDANCE
        ===================================================== */
 
-    <?php
+    async function submitAttendance(
+        url,
+        successMessage,
+        icon,
+        button
+    ) {
 
-header('Content-Type: application/json; charset=utf-8');
+        if (button) {
 
-$servername = "127.0.0.1:3306";
-$username = "root";
-$password = "";
-$database = "kad_kahwin";
+            button.disabled = true;
 
-$connection = mysqli_connect(
-    $servername,
-    $username,
-    $password,
-    $database
-);
+        }
 
-if (!$connection) {
-    echo json_encode([
-        'attend' => false,
-        'error' => 'Database connection failed: ' . mysqli_connect_error()
-    ]);
-    exit;
-}
 
-if ($_SERVER["REQUEST_METHOD"] !== "POST") {
-    echo json_encode([
-        'attend' => false,
-        'error' => 'Invalid request method'
-    ]);
-    exit;
-}
+        try {
 
-if (!isset($_POST['action']) || $_POST['action'] !== 'increment') {
-    echo json_encode([
-        'attend' => false,
-        'error' => 'Invalid action'
-    ]);
-    exit;
-}
+            const response =
+                await fetch(
+                    url,
+                    {
+                        method: "POST",
 
-$sql = "
-    UPDATE kehadiran
-    SET jumlah_tidak_hadir = jumlah_tidak_hadir + 1
-    WHERE id = 1
-";
+                        headers: {
+                            "Content-Type":
+                                "application/x-www-form-urlencoded; charset=UTF-8"
+                        },
 
-if (mysqli_query($connection, $sql)) {
+                        body:
+                            "action=increment"
+                    }
+                );
 
-    echo json_encode([
-        'attend' => true,
-        'message' => 'Tidak hadir berjaya direkodkan'
-    ]);
 
-} else {
+            if (!response.ok) {
 
-    echo json_encode([
-        'attend' => false,
-        'error' => mysqli_error($connection)
-    ]);
+                throw new Error(
+                    "HTTP Error: " +
+                    response.status
+                );
 
-}
+            }
 
-mysqli_close($connection);
-exit;
+
+            const data =
+                await response.json();
+
+
+            if (!data.attend) {
+
+                throw new Error(
+                    data.error ||
+                    "Gagal merekodkan kehadiran."
+                );
+
+            }
+
+
+            console.log(
+                "RSVP berjaya:",
+                data
+            );
+
+
+            showSuccess(
+                successMessage,
+                icon
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                "RSVP error:",
+                error
+            );
+
+
+            alert(
+                "Maaf, rekod kehadiran tidak dapat dihantar. Sila cuba lagi."
+            );
+
+
+        } finally {
+
+            if (button) {
+
+                button.disabled =
+                    false;
+
+            }
+
+        }
+
+    }
 
 
     /* =====================================================
@@ -1979,8 +1942,11 @@ exit;
 
                 submitAttendance(
                     "count_hadir.php",
+
                     "Kami menantikan kedatangan anda!",
+
                     "bx bxs-wink-smile",
+
                     btnHadir
                 );
 
@@ -2012,8 +1978,11 @@ exit;
 
                 submitAttendance(
                     "count_tidak_hadir.php",
+
                     "Terima kasih kerana memaklumkan kepada kami.",
+
                     "bx bxs-sad",
+
                     btnTidakHadir
                 );
 
@@ -2064,9 +2033,7 @@ exit;
         );
 
 
-        /* ---------------------------------------------
-           AUDIO PLAY EVENT
-           --------------------------------------------- */
+        /* AUDIO PLAY */
 
         audioPlayer.addEventListener(
             "play",
@@ -2097,9 +2064,7 @@ exit;
         );
 
 
-        /* ---------------------------------------------
-           AUDIO PAUSE EVENT
-           --------------------------------------------- */
+        /* AUDIO PAUSE */
 
         audioPlayer.addEventListener(
             "pause",
@@ -2127,16 +2092,14 @@ exit;
         );
 
 
-        /* ---------------------------------------------
-           AUDIO ERROR
-           --------------------------------------------- */
+        /* AUDIO ERROR */
 
         audioPlayer.addEventListener(
             "error",
             event => {
 
                 console.error(
-                    "❌ Audio error:",
+                    "Audio error:",
                     event
                 );
 
@@ -2177,7 +2140,7 @@ exit;
 
 
     console.log(
-        "💍 Sikin & Aziman Wedding Invitation JS loaded."
+        "Sikin & Aziman Wedding Invitation JS loaded."
     );
 
 });
