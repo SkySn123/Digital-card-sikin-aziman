@@ -1740,17 +1740,6 @@ li {
     z-index: -1 !important;
 }
 
-
-/* PINTU TAK BOLEH HALANG KAD / MENU */
-.door-screen {
-    pointer-events: none !important;
-}
-
-.door-screen.open {
-    pointer-events: none !important;
-}
-
-
 /* MENU PALING ATAS */
 .footer .menu {
     z-index: 12000 !important;
