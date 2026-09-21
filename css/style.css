@@ -65,6 +65,207 @@ li {
     -webkit-tap-highlight-color: transparent;
 }
 
+/* =========================================================
+   DOOR OPENING
+   FLOW:
+   1. Papar gambar pintu
+   2. User tekan
+   3. Dua pintu terbuka
+   4. Video muncul
+   ========================================================= */
+
+.door-screen {
+    position: fixed;
+    inset: 0;
+
+    width: 100%;
+    height: 100vh;
+
+    z-index: 30000;
+
+    display: flex;
+
+    overflow: hidden;
+
+    background: #173B6C;
+
+    cursor: pointer;
+
+    pointer-events: auto;
+
+    touch-action: manipulation;
+
+    transition:
+        opacity .6s ease,
+        visibility .6s ease;
+}
+
+
+/* =========================================================
+   DUA BAHAGIAN PINTU
+   ========================================================= */
+
+.door-half {
+    position: absolute;
+
+    top: 0;
+
+    width: 50%;
+    height: 100%;
+
+    background-image: url("../Image/door.jpg");
+    background-repeat: no-repeat;
+
+    background-size: 200% 100%;
+
+    transition:
+        transform 1.8s cubic-bezier(.77, 0, .18, 1);
+
+    will-change: transform;
+}
+
+
+/* =========================================================
+   PINTU KIRI
+   ========================================================= */
+
+.door-left {
+    left: 0;
+
+    background-position: left center;
+
+    border-right: 1px solid rgba(217,166,46,.7);
+
+    transform: translateX(0);
+}
+
+
+/* =========================================================
+   PINTU KANAN
+   ========================================================= */
+
+.door-right {
+    right: 0;
+
+    background-position: right center;
+
+    border-left: 1px solid rgba(217,166,46,.7);
+
+    transform: translateX(0);
+}
+
+
+/* =========================================================
+   EFFECT BILA PINTU DIBUKA
+   ========================================================= */
+
+.door-screen.open .door-left {
+    transform: translateX(-100%);
+}
+
+.door-screen.open .door-right {
+    transform: translateX(100%);
+}
+
+
+/* =========================================================
+   TEKS "SENTUH UNTUK MEMBUKA"
+   ========================================================= */
+
+.door-hint {
+    position: absolute;
+
+    left: 50%;
+    bottom: 12%;
+
+    transform: translateX(-50%);
+
+    z-index: 5;
+
+    text-align: center;
+
+    pointer-events: none;
+
+    color: #FFF9EF;
+
+    font-family: "Playfair Display", serif;
+
+    font-size: 13px;
+
+    letter-spacing: 4px;
+
+    text-transform: uppercase;
+
+    text-shadow:
+        0 2px 8px rgba(0,0,0,.45);
+
+    animation:
+        doorHintPulse 2s ease-in-out infinite;
+}
+
+
+.door-hint span {
+    display: inline-block;
+
+    padding: 12px 22px;
+
+    border: 1px solid rgba(241,199,91,.75);
+
+    background: rgba(23,59,108,.35);
+
+    backdrop-filter: blur(5px);
+}
+
+
+/* =========================================================
+   HILANG SELEPAS PINTU TERBUKA
+   ========================================================= */
+
+.door-screen.open .door-hint {
+    opacity: 0;
+
+    transition: opacity .4s ease;
+}
+
+
+@keyframes doorHintPulse {
+
+    0%,
+    100% {
+        opacity: .65;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    .door-hint {
+        bottom: 10%;
+
+        font-size: 10px;
+
+        letter-spacing: 3px;
+    }
+
+    .door-hint span {
+        padding: 10px 17px;
+    }
+
+    .door-half {
+        transition:
+            transform 1.5s cubic-bezier(.77, 0, .18, 1);
+    }
+
+}
 
 /* =========================================================
    VIDEO INTRO — TAYANG DAHULU 11 SAAT
@@ -238,301 +439,6 @@ li {
     background: var(--gold);
 }
 
-
-/* =========================================================
-   WAX SEAL
-   ========================================================= */
-
-.wax-seal {
-    border: 0;
-    background: transparent;
-
-    cursor: pointer;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    margin: 0 auto;
-
-    color: var(--brown);
-
-    position: relative;
-
-    z-index: 11001;
-
-    pointer-events: auto;
-
-    touch-action: manipulation;
-
-    -webkit-tap-highlight-color: transparent;
-}
-
-#open-invitation-btn {
-    position: relative;
-
-    z-index: 11001;
-
-    pointer-events: auto;
-
-    cursor: pointer;
-
-    touch-action: manipulation;
-
-    -webkit-tap-highlight-color: transparent;
-}
-
-
-.seal {
-    width: 170px;
-    height: 170px;
-
-    border-radius: 50%;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    background:
-        radial-gradient(
-            circle at 35% 30%,
-            #F6D66E,
-            #D9A62E 45%,
-            #A52A3A 100%
-        );
-
-    box-shadow:
-        0 12px 30px rgba(23, 59, 108, .20),
-        inset 0 0 0 4px rgba(255,255,255,.24);
-
-    animation: sealAppear 1.2s .5s ease both;
-
-    transition: transform .4s ease;
-}
-
-.wax-seal:hover .seal {
-    transform: scale(1.04) rotate(-2deg);
-}
-
-.seal-inner {
-    width: 135px;
-    height: 135px;
-
-    border-radius: 50%;
-    border: 1px solid rgba(255,255,255,.65);
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-
-    color: #FFFDF5;
-
-    position: relative;
-}
-
-.monogram {
-    font-family: "Scripter", cursive;
-    font-size: 42px;
-    line-height: 1;
-}
-
-.seal-date {
-    font-family: "Playfair Display", serif;
-    font-size: 9px;
-    letter-spacing: 2px;
-
-    margin-top: 8px;
-}
-
-.seal-decoration {
-    position: absolute;
-    font-size: 17px;
-}
-
-.seal-decoration.top {
-    top: 11px;
-}
-
-.seal-decoration.bottom {
-    bottom: 9px;
-    transform: rotate(180deg);
-}
-
-.open-text {
-    display: block;
-
-    margin-top: 19px;
-
-    font-family: "Playfair Display", serif;
-    font-size: 12px;
-    letter-spacing: 4px;
-
-    color: var(--rose);
-}
-
-.open-hint {
-    display: block;
-
-    margin-top: 5px;
-
-    font-size: 12px;
-    font-style: italic;
-
-    color: #6F7D91;
-}
-
-.opening-date {
-    margin-top: 20px;
-
-    font-family: "Playfair Display", serif;
-    font-size: 11px;
-    letter-spacing: 3px;
-
-    color: var(--brown);
-}
-
-.opening-ornament {
-    position: absolute;
-
-    color: var(--gold);
-    font-size: 55px;
-    opacity: .65;
-
-    z-index: 1;
-}
-
-.ornament-top-left {
-    top: 55px;
-    left: 55px;
-}
-
-.ornament-top-right {
-    top: 55px;
-    right: 55px;
-
-    transform: scaleX(-1);
-}
-
-.ornament-bottom-left {
-    bottom: 45px;
-    left: 55px;
-
-    transform: rotate(180deg);
-}
-
-.ornament-bottom-right {
-    bottom: 45px;
-    right: 55px;
-
-    transform: rotate(180deg) scaleX(-1);
-}
-
-
-/* =========================================================
-   DOUBLE DOOR
-   ========================================================= */
-
-.door-screen {
-    position: fixed;
-    inset: 0;
-
-    z-index: 10500;
-
-    display: flex;
-
-    background: transparent;
-
-    overflow: hidden;
-
-    pointer-events: none;
-}
-
-.door-screen.open {
-    background: transparent;
-
-    pointer-events: none;
-}
-
-.door {
-    position: relative;
-
-    width: 50%;
-    height: 100%;
-
-    background:
-        linear-gradient(
-            90deg,
-            #173B6C,
-            #285A9E 45%,
-            #D9A62E
-        );
-
-    box-shadow:
-        inset 0 0 70px rgba(23, 59, 108, .25);
-
-    transition:
-        transform 2.2s cubic-bezier(.77,0,.18,1);
-}
-
-.door-left {
-    border-right: 1px solid rgba(217,166,46,.55);
-
-    transform-origin: left center;
-}
-
-.door-right {
-    border-left: 1px solid rgba(217,166,46,.55);
-
-    transform-origin: right center;
-}
-
-.door-screen.open .door-left {
-    transform: translateX(-100%);
-}
-
-.door-screen.open .door-right {
-    transform: translateX(100%);
-}
-
-.door-inner {
-    position: absolute;
-
-    top: 50%;
-
-    width: 100%;
-
-    text-align: center;
-
-    transform: translateY(-50%);
-
-    color: #FFF9EF;
-}
-
-.door-inner p {
-    font-family: "Playfair Display", serif;
-    font-size: 12px;
-    letter-spacing: 5px;
-
-    margin-bottom: 15px;
-}
-
-.door-inner span {
-    font-family: "Scripter", cursive;
-    font-size: 80px;
-
-    color: #F1C75B;
-}
-
-.door-left::after,
-.door-right::after {
-    content: "";
-
-    position: absolute;
-    inset: 30px;
-
-    border: 1px solid rgba(241,199,91,.65);
-}
 
 
 /* =========================================================
