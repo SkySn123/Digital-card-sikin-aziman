@@ -2,28 +2,55 @@
 
 
 /* =========================================================
-   ROOT
+   ROOT — DREAMY BABY BLUE + LILAC
    ========================================================= */
 
 :root {
-    --cream: #FFF9EF;
-    --paper: #FFFCF6;
 
-    --sage: #285A9E;
-    --sage2: #6F91C2;
-    --olive: #D9A62E;
+    /* 🩵 BABY BLUE */
+    --baby-blue: #C7E5F5;
+    --soft-blue: #E7F4FB;
+    --powder-blue: #D8ECF7;
 
-    --pink: #E7B8B8;
-    --rose: #A52A3A;
-    --mauve: #C95B63;
+    /* 💜 LILAC */
+    --lilac: #D8C9EE;
+    --soft-lilac: #EDE6F8;
+    --deep-lilac: #9B86C4;
 
-    --gold: #D9A62E;
-    --gold2: #A87512;
-
-    --brown: #173B6C;
-    --text: #4F5E72;
-
+    /* 🤍 PEARL */
+    --pearl: #FCFBFF;
+    --paper: #FFFDFE;
     --white: #FFFFFF;
+
+    /* 🌫️ TEXT */
+    --text: #687086;
+    --dark-accent: #727A99;
+
+    /* ✨ SOFT DECORATION */
+    --silver-lilac: #CFC8E2;
+    --blue-grey: #AEBFD1;
+
+
+    /* =====================================================
+       COMPATIBILITY VARIABLES
+       Supaya CSS lama masih boleh guna variable ini
+       ===================================================== */
+
+    --cream: #F8FBFE;
+
+    --sage: #C7E5F5;
+    --sage2: #D8ECF7;
+
+    --olive: #D8C9EE;
+
+    --pink: #EDE6F8;
+    --rose: #9B86C4;
+    --mauve: #AD9BCF;
+
+    --gold: #CFC8E2;
+    --gold2: #9B86C4;
+
+    --brown: #727A99;
 }
 
 
@@ -40,19 +67,32 @@
 html {
     scroll-behavior: smooth;
 }
+
 body {
     min-height: 100vh;
 
     background:
         radial-gradient(
-            circle at top,
-            #F1C75B 0%,
-            #D9A62E 45%,
-            #173B6C 100%
+            circle at 15% 5%,
+            #FFFFFF 0%,
+            transparent 32%
+        ),
+        radial-gradient(
+            circle at 85% 15%,
+            #EDE6F8 0%,
+            transparent 38%
+        ),
+        linear-gradient(
+            135deg,
+            #E7F4FB 0%,
+            #F4F0FA 50%,
+            #D8ECF7 100%
         );
 
     color: var(--text);
+
     font-family: "Cormorant Garamond", serif;
+
     overflow-x: hidden;
 }
 
@@ -65,13 +105,9 @@ li {
     -webkit-tap-highlight-color: transparent;
 }
 
+
 /* =========================================================
    DOOR OPENING
-   FLOW:
-   1. Papar gambar pintu
-   2. User tekan
-   3. Dua pintu terbuka
-   4. Video muncul
    ========================================================= */
 
 .door-screen {
@@ -87,7 +123,7 @@ li {
 
     overflow: hidden;
 
-    background: #000;
+    background: #DCEBF4;
 
     cursor: pointer;
 
@@ -114,6 +150,7 @@ li {
     height: 100%;
 
     background-image: url("../Image/6163354331659309161.jpg");
+
     background-repeat: no-repeat;
 
     background-size: 200% 100%;
@@ -134,7 +171,8 @@ li {
 
     background-position: left center;
 
-    border-right: 1px solid rgba(217,166,46,.7);
+    border-right:
+        1px solid rgba(216,201,238,.75);
 
     transform: translateX(0);
 }
@@ -149,7 +187,8 @@ li {
 
     background-position: right center;
 
-    border-left: 1px solid rgba(217,166,46,.7);
+    border-left:
+        1px solid rgba(216,201,238,.75);
 
     transform: translateX(0);
 }
@@ -186,7 +225,7 @@ li {
 
     pointer-events: none;
 
-    color: #FFF9EF;
+    color: #FFFFFF;
 
     font-family: "Playfair Display", serif;
 
@@ -197,23 +236,26 @@ li {
     text-transform: uppercase;
 
     text-shadow:
-        0 2px 8px rgba(0,0,0,.45);
+        0 2px 8px rgba(80,90,120,.35);
 
     animation:
         doorHintPulse 2s ease-in-out infinite;
 }
-
 
 .door-hint span {
     display: inline-block;
 
     padding: 12px 22px;
 
-    border: 1px solid rgba(241,199,91,.75);
+    border:
+        1px solid rgba(255,255,255,.75);
 
-    background: rgba(23,59,108,.35);
+    background:
+        rgba(114,122,153,.28);
 
-    backdrop-filter: blur(5px);
+    backdrop-filter: blur(7px);
+
+    border-radius: 2px;
 }
 
 
@@ -238,7 +280,6 @@ li {
     50% {
         opacity: 1;
     }
-
 }
 
 
@@ -264,11 +305,11 @@ li {
         transition:
             transform 1.5s cubic-bezier(.77, 0, .18, 1);
     }
-
 }
 
+
 /* =========================================================
-   VIDEO INTRO — TAYANG DAHULU 11 SAAT
+   VIDEO INTRO
    ========================================================= */
 
 .video-intro {
@@ -278,12 +319,9 @@ li {
     width: 100%;
     height: 100vh;
 
-    /*
-     * PALING ATAS SEBAIK SAHAJA VIDEO DIPANGGIL
-     */
     z-index: 40000;
 
-    background: #000;
+    background: #DCEBF4;
 
     display: none;
 
@@ -291,7 +329,9 @@ li {
     justify-content: center;
 
     opacity: 1;
+
     visibility: visible;
+
     pointer-events: auto;
 
     overflow: hidden;
@@ -301,7 +341,6 @@ li {
         visibility 1s ease;
 }
 
-
 .video-intro video {
     width: 100%;
     height: 100%;
@@ -310,20 +349,21 @@ li {
 
     display: block;
 
-    background: #000;
+    background: #DCEBF4;
 }
-
 
 .video-intro.hide {
     display: none !important;
 
     opacity: 0 !important;
+
     visibility: hidden !important;
 
     pointer-events: none !important;
 
     z-index: -1 !important;
 }
+
 
 /* =========================================================
    OPENING
@@ -336,70 +376,84 @@ li {
     z-index: 11000;
 
     display: flex;
+
     align-items: center;
     justify-content: center;
 
     background:
         radial-gradient(
             circle at center,
-            #FFFDF8 0%,
-            #FFF4D6 50%,
-            #F1C75B 100%
+            #FFFFFF 0%,
+            #F8F5FC 42%,
+            #E7F4FB 75%,
+            #D8C9EE 100%
         );
 
-    border: 10px solid var(--gold);
+    border:
+        10px solid var(--silver-lilac);
 
     overflow: hidden;
 
     opacity: 0;
+
     visibility: hidden;
+
     pointer-events: none;
 
     transition:
-        opacity 0.8s ease,
-        visibility 0.8s ease;
+        opacity .8s ease,
+        visibility .8s ease;
 }
 
 
-/* Opening muncul */
+/* OPENING MUNCUL */
 
 .wedding-opening.show {
     opacity: 1;
+
     visibility: visible;
+
     pointer-events: auto;
 }
 
 
-/* Opening sedang ditutup selepas tekan BUKA */
+/* OPENING DITUTUP */
 
 .wedding-opening.opening-hide {
     opacity: 0;
+
     visibility: hidden;
+
     pointer-events: none;
 }
 
+
+/* FRAME DALAM */
 
 .wedding-opening::before {
     content: "";
 
     position: absolute;
+
     inset: 14px;
 
-    border: 1px solid rgba(23, 59, 108, .65);
+    border:
+        1px solid rgba(114,122,153,.35);
 
     pointer-events: none;
 
     z-index: 2;
 }
 
-
 .wedding-opening::after {
     content: "";
 
     position: absolute;
+
     inset: 23px;
 
-    border: 1px solid rgba(165, 42, 58, .45);
+    border:
+        1px solid rgba(155,134,196,.30);
 
     pointer-events: none;
 
@@ -417,39 +471,54 @@ li {
     width: min(90%, 600px);
 }
 
-
 .opening-small-title {
     font-family: "Playfair Display", serif;
+
     font-size: 13px;
+
     letter-spacing: 5px;
-    color: var(--brown);
+
+    color: var(--dark-accent);
 
     margin-bottom: 18px;
 
-    animation: openingFadeDown 1s ease both;
+    animation:
+        openingFadeDown 1s ease both;
 }
-
 
 .opening-names {
     font-family: "Allura", cursive;
+
     font-size: clamp(58px, 13vw, 100px);
+
     font-weight: 400;
+
     line-height: .9;
-    color: var(--rose);
 
-    animation: openingFadeUp 1s .2s ease both;
+    color: var(--deep-lilac);
+
+    text-shadow:
+        0 2px 15px rgba(155,134,196,.12);
+
+    animation:
+        openingFadeUp 1s .2s ease both;
 }
-
 
 .opening-line {
     width: 100px;
+
     height: 1px;
 
     margin: 25px auto;
 
-    background: var(--gold);
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            var(--silver-lilac),
+            transparent
+        );
 }
-
 
 
 /* =========================================================
@@ -460,6 +529,7 @@ li {
     display: none;
 
     width: min(100%, 760px);
+
     min-height: 100vh;
 
     margin: 0 auto;
@@ -471,16 +541,16 @@ li {
     overflow: hidden;
 
     background-color: var(--paper);
-    background-image: url("../Image/background paper.jpg");
+
+    background-image:
+        url("../Image/background paper.jpg");
+
     background-repeat: repeat-y;
+
     background-position: top center;
+
     background-size: 100% auto;
 }
-
-
-/* =========================================================
-   BUTTERFLY — GANTI PETAL
-   ========================================================= */
 
 
 /* =========================================================
@@ -489,6 +559,7 @@ li {
 
 .petal-container {
     position: fixed;
+
     inset: 0;
 
     width: 100%;
@@ -503,17 +574,24 @@ li {
 
 .petal {
     position: absolute;
+
     top: 0;
     left: -20px;
 
     width: 8px;
     height: 8px;
 
-    border-radius: 70% 30% 70% 30%;
+    border-radius:
+        70% 30% 70% 30%;
 
-    background: #D9A62E;
+    background:
+        linear-gradient(
+            135deg,
+            #D8ECF7,
+            #D8C9EE
+        );
 
-    opacity: 0.5;
+    opacity: .55;
 
     pointer-events: none;
 
@@ -529,91 +607,14 @@ li {
 }
 
 
-@keyframes petalFall {
-
-    0% {
-        transform:
-            translate3d(
-                0,
-                -30px,
-                0
-            )
-            rotate(0deg);
-
-        opacity: 0;
-    }
-
-    10% {
-        opacity: 0.7;
-    }
-
-    50% {
-        transform:
-            translate3d(
-                var(--translate-x),
-                50vh,
-                0
-            )
-            rotate(180deg);
-    }
-
-    100% {
-        transform:
-            translate3d(
-                var(--translate-y),
-                110vh,
-                0
-            )
-            rotate(360deg);
-
-        opacity: 0;
-    }
-
-}
-
-
-@keyframes butterflyFloat {
-
-    from {
-        margin-left: -4px;
-    }
-
-    to {
-        margin-left: 4px;
-    }
-
-}
-
-
-@keyframes wingLeft {
-
-    from {
-        transform: rotateY(0deg);
-    }
-
-    to {
-        transform: rotateY(65deg);
-    }
-
-}
-
-
-@keyframes wingRight {
-
-    from {
-        transform: scaleX(-1) rotateY(0deg);
-    }
-
-    to {
-        transform: scaleX(-1) rotateY(65deg);
-    }
-
-}
-
+/* =========================================================
+   CARD CONTENT
+   ========================================================= */
 
 .card > section,
 .card > .info {
     position: relative;
+
     z-index: 2;
 }
 
@@ -624,20 +625,26 @@ li {
 
 .intro {
     min-height: 100vh;
+
     width: 100%;
 
     padding: 0;
     margin: 0;
 
     display: flex;
+
     align-items: center;
     justify-content: center;
 
     position: relative;
 
-    background-image: url("../Image/6163354331659309382.jpg" );
+    background-image:
+        url("../Image/6163354331659309382.jpg");
+
     background-repeat: no-repeat;
+
     background-position: center center;
+
     background-size: cover;
 
     background-color: var(--paper);
@@ -645,30 +652,22 @@ li {
     text-align: center;
 }
 
-
-/* BUANG ORNAMENT ❦ */
-
 .intro::before,
 .intro::after {
     display: none !important;
 }
 
-
-/* SEMBUNYIKAN SEMUA CONTENT */
-
 .intro .content {
     display: none !important;
 }
-
-
-/* Pastikan tulisan lama tidak muncul */
 
 .intro .intro-small,
 .intro .title,
 .intro h2,
 .intro .date {
     display: none !important;
-               }
+}
+
 
 /* =========================================================
    INFO
@@ -681,7 +680,8 @@ li {
 }
 
 .section-decoration {
-    color: var(--gold);
+    color: var(--deep-lilac);
+
     font-size: 45px;
 
     margin-bottom: 25px;
@@ -689,6 +689,7 @@ li {
 
 .event-info {
     font-size: 17px;
+
     line-height: 1.35;
 }
 
@@ -700,27 +701,34 @@ li {
     margin: 20px 0;
 
     font-family: "Playfair Display", serif;
+
     font-size: 30px;
 
-    color: var(--brown);
+    color: var(--dark-accent);
 }
 
 .event-info .two {
     margin: 35px 0;
 
     font-family: "Sweet Apricot", serif;
-    font-size: clamp(30px, 12vw, 58px);
+
+    font-size:
+        clamp(30px, 12vw, 58px);
 
     line-height: 1;
 
-    color: var(--rose);
+    color: var(--deep-lilac);
 }
 
 .event-info .two p:nth-child(2) {
-    font-family: "Cormorant Garamond", serif;
+    font-family:
+        "Cormorant Garamond", serif;
+
     font-size: 20px;
 
     margin: 12px 0;
+
+    color: var(--text);
 }
 
 .event-info .three,
@@ -731,12 +739,14 @@ li {
 
 .event-info .title,
 .aturcara .title {
-    font-family: "Playfair Display", serif;
+    font-family:
+        "Playfair Display", serif;
+
     text-transform: uppercase;
 
     letter-spacing: 4px;
 
-    color: var(--gold2);
+    color: var(--deep-lilac);
 
     font-size: 12px;
 
@@ -745,7 +755,7 @@ li {
 
 
 /* =========================================================
-   PAGE 2 — FLORAL FRAME 4 PENJURU
+   PAGE 2 — FLORAL FRAME
    ========================================================= */
 
 .info {
@@ -755,23 +765,27 @@ li {
 
     padding: 90px 35px 55px;
 
-    border: 1px solid rgba(217,166,46,.55);
+    border:
+        1px solid rgba(216,201,238,.75);
 
     background:
         linear-gradient(
-            rgba(255,252,246,.72),
-            rgba(255,252,246,.72)
+            rgba(255,253,254,.82),
+            rgba(247,250,253,.82)
         );
 
     box-shadow:
-        inset 0 0 0 4px rgba(255,255,255,.45),
-        0 10px 35px rgba(23,59,108,.08);
+        inset 0 0 0 4px
+            rgba(255,255,255,.60),
+
+        0 10px 35px
+            rgba(114,122,153,.08);
 
     overflow: hidden;
 }
 
 
-/* Bingkai gold dalam */
+/* Bingkai dalam */
 
 .info::before {
     content: "";
@@ -780,7 +794,8 @@ li {
 
     inset: 12px;
 
-    border: 1px solid rgba(23,59,108,.38);
+    border:
+        1px solid rgba(114,122,153,.25);
 
     pointer-events: none;
 
@@ -798,26 +813,24 @@ li {
     width: 145px;
     height: 145px;
 
-    background-image: url("../Image/flower border.png");
+    background-image:
+        url("../Image/flower border.png");
 
     background-repeat: no-repeat;
+
     background-size: contain;
 
     pointer-events: none;
 
     z-index: 2;
+
+    opacity: .75;
 }
-
-
-/* KIRI ATAS */
 
 .info .floral-top-left {
     top: 0;
     left: 0;
 }
-
-
-/* KANAN ATAS */
 
 .info .floral-top-right {
     top: 0;
@@ -826,9 +839,6 @@ li {
     transform: scaleX(-1);
 }
 
-
-/* KIRI BAWAH */
-
 .info .floral-bottom-left {
     bottom: 0;
     left: 0;
@@ -836,18 +846,14 @@ li {
     transform: rotate(180deg);
 }
 
-
-/* KANAN BAWAH */
-
 .info .floral-bottom-right {
     bottom: 0;
     right: 0;
 
-    transform: rotate(180deg) scaleX(-1);
+    transform:
+        rotate(180deg)
+        scaleX(-1);
 }
-
-
-/* Kandungan Page 2 */
 
 .info > * {
     position: relative;
@@ -871,13 +877,16 @@ li {
 .counter .title {
     display: block;
 
-    font-family: "Playfair Display", serif;
+    font-family:
+        "Playfair Display", serif;
+
     text-transform: uppercase;
 
     letter-spacing: 4px;
+
     font-size: 12px;
 
-    color: var(--gold2);
+    color: var(--deep-lilac);
 
     margin-bottom: 22px;
 }
@@ -885,7 +894,8 @@ li {
 .counter-boxes {
     display: grid;
 
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns:
+        repeat(4, 1fr);
 
     gap: 10px;
 }
@@ -893,17 +903,30 @@ li {
 .count-box {
     padding: 18px 5px;
 
-    border: 1px solid rgba(217,166,46,.45);
+    border:
+        1px solid rgba(216,201,238,.65);
 
-    background: rgba(255,255,255,.55);
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.82),
+            rgba(237,230,248,.55)
+        );
+
+    box-shadow:
+        0 4px 15px
+            rgba(114,122,153,.05);
 }
 
 .count-box .value {
-    font-family: "Playfair Display", serif;
+    font-family:
+        "Playfair Display", serif;
+
     font-size: 30px;
+
     font-weight: 500;
 
-    color: var(--brown);
+    color: var(--dark-accent);
 }
 
 .count-box span {
@@ -913,7 +936,7 @@ li {
 
     margin-top: 3px;
 
-    color: var(--sage);
+    color: #88A9BE;
 }
 
 
@@ -928,8 +951,11 @@ li {
 
     padding: 40px 25px;
 
-    border-top: 1px solid rgba(217,166,46,.45);
-    border-bottom: 1px solid rgba(217,166,46,.45);
+    border-top:
+        1px solid rgba(216,201,238,.60);
+
+    border-bottom:
+        1px solid rgba(216,201,238,.60);
 }
 
 .aturcara .title {
@@ -945,7 +971,8 @@ li {
 
     padding: 15px 5px;
 
-    border-bottom: 1px dashed rgba(217,166,46,.38);
+    border-bottom:
+        1px dashed rgba(216,201,238,.45);
 
     font-size: 16px;
 }
@@ -955,7 +982,7 @@ li {
 }
 
 .aturcara > div p:last-child {
-    color: var(--rose);
+    color: var(--deep-lilac);
 
     white-space: nowrap;
 }
@@ -978,16 +1005,21 @@ li {
 
     background:
         linear-gradient(
-            rgba(255,249,239,.90),
-            rgba(255,249,239,.90)
+            rgba(255,253,254,.94),
+            rgba(237,230,248,.72)
         ),
         radial-gradient(
             circle at center,
-            #F1C75B,
-            #FFF4D6
+            #D8ECF7,
+            #EDE6F8
         );
 
-    border: 1px solid rgba(217,166,46,.42);
+    border:
+        1px solid rgba(216,201,238,.55);
+
+    box-shadow:
+        0 8px 30px
+            rgba(114,122,153,.06);
 }
 
 .floral-bg {
@@ -995,7 +1027,7 @@ li {
 
     font-size: 45px;
 
-    color: var(--gold);
+    color: var(--silver-lilac);
 
     margin-bottom: 20px;
 }
@@ -1008,6 +1040,8 @@ li {
     font-size: 18px;
 
     line-height: 1.8;
+
+    color: var(--text);
 }
 
 
@@ -1018,7 +1052,7 @@ li {
 .divider {
     text-align: center;
 
-    color: var(--gold);
+    color: var(--silver-lilac);
 
     margin: 60px 0 30px;
 
@@ -1037,11 +1071,14 @@ li {
 .rsvp > h2 {
     text-align: center;
 
-    font-family: "Great Vibes", cursive;
+    font-family:
+        "Great Vibes", cursive;
+
     font-size: 65px;
+
     font-weight: 400;
 
-    color: var(--rose);
+    color: var(--deep-lilac);
 
     margin-bottom: 25px;
 }
@@ -1055,17 +1092,24 @@ li {
 .container-message .content {
     padding: 20px;
 
-    background: rgba(255,255,255,.62);
+    background:
+        rgba(255,255,255,.72);
 
-    border: 1px solid rgba(217,166,46,.32);
+    border:
+        1px solid rgba(216,201,238,.42);
 
     text-align: left;
+
+    box-shadow:
+        0 5px 20px
+            rgba(114,122,153,.04);
 }
 
 .container-message .name {
-    font-family: "Playfair Display", serif;
+    font-family:
+        "Playfair Display", serif;
 
-    color: var(--brown);
+    color: var(--dark-accent);
 
     margin-bottom: 8px;
 }
@@ -1075,7 +1119,7 @@ li {
 
     line-height: 1.5;
 
-    color: #5D6B7D;
+    color: #6F788A;
 }
 
 .beri-ucapan-button {
@@ -1089,11 +1133,12 @@ li {
 }
 
 .beri-ucapan-button button {
-    border: 1px solid var(--gold);
+    border:
+        1px solid var(--silver-lilac);
 
     background: var(--paper);
 
-    color: var(--brown);
+    color: var(--dark-accent);
 
     padding: 15px 8px;
 
@@ -1105,7 +1150,7 @@ li {
 }
 
 .beri-ucapan-button button:hover {
-    background: var(--rose);
+    background: var(--deep-lilac);
 
     color: white;
 }
@@ -1133,25 +1178,30 @@ li {
     background:
         linear-gradient(
             180deg,
-            #FFF4D6,
-            #E8D5A4
+            #EEF7FC 0%,
+            #F2ECF9 55%,
+            #E3D9F1 100%
         );
 }
 
 .footer > p {
-    font-family: "Allura", cursive;
+    font-family:
+        "Allura", cursive;
+
     font-size: 48px;
 
-    color: var(--rose);
+    color: var(--deep-lilac);
 }
 
 .footer > span {
-    font-family: "Playfair Display", serif;
+    font-family:
+        "Playfair Display", serif;
 
     letter-spacing: 3px;
+
     font-size: 11px;
 
-    color: var(--gold2);
+    color: var(--dark-accent);
 }
 
 
@@ -1165,6 +1215,7 @@ li {
     z-index: 12000 !important;
 
     bottom: 18px;
+
     left: 50%;
 
     transform: translateX(-50%);
@@ -1179,16 +1230,19 @@ li {
 
     padding: 10px;
 
-    background: rgba(23,59,108,.97);
+    background:
+        rgba(114,122,153,.94);
 
-    border: 1px solid rgba(241,199,91,.65);
+    border:
+        1px solid rgba(255,255,255,.70);
 
     border-radius: 40px;
 
     box-shadow:
-        0 10px 30px rgba(23,59,108,.25);
+        0 10px 30px
+            rgba(114,122,153,.20);
 
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(12px);
 
     pointer-events: auto !important;
 }
@@ -1208,7 +1262,7 @@ li {
     align-items: center;
     justify-content: center;
 
-    color: #F1C75B;
+    color: #F5FAFD;
 
     cursor: pointer;
 
@@ -1218,7 +1272,7 @@ li {
 }
 
 .footer .menu li:hover {
-    background: var(--rose);
+    background: var(--deep-lilac);
 
     color: white;
 }
@@ -1240,6 +1294,7 @@ li {
     z-index: 13000 !important;
 
     left: 50%;
+
     bottom: 85px;
 
     width: min(92%, 550px);
@@ -1248,7 +1303,8 @@ li {
 
     overflow-y: auto;
 
-    transform: translate(-50%, 25px);
+    transform:
+        translate(-50%, 25px);
 
     opacity: 0;
 
@@ -1261,16 +1317,20 @@ li {
     background:
         linear-gradient(
             135deg,
-            #173B6C 0%,
-            #285A9E 45%,
-            #A52A3A 100%
+            #AFC9DC 0%,
+            #AFC8DD 35%,
+            #B9A9D2 100%
         );
 
-    border: 1px solid rgba(241,199,91,.75);
+    border:
+        1px solid rgba(255,255,255,.75);
 
     box-shadow:
-        0 20px 60px rgba(23,59,108,.28),
-        inset 0 1px 0 rgba(255,255,255,.35);
+        0 20px 60px
+            rgba(114,122,153,.20),
+
+        inset 0 1px 0
+            rgba(255,255,255,.45);
 
     transition: .35s ease;
 }
@@ -1282,7 +1342,8 @@ li {
 
     pointer-events: auto !important;
 
-    transform: translate(-50%, 0);
+    transform:
+        translate(-50%, 0);
 }
 
 .toggle-menu > div {
@@ -1292,15 +1353,20 @@ li {
 }
 
 .toggle-menu h1 {
-    font-family: "Allura", cursive;
+    font-family:
+        "Allura", cursive;
 
     font-size: 50px;
 
     font-weight: 400;
 
-    color: #F1C75B;
+    color: #FDFBFF;
 
     margin-bottom: 15px;
+
+    text-shadow:
+        0 2px 8px
+            rgba(114,122,153,.15);
 }
 
 .toggle-menu p {
@@ -1308,25 +1374,28 @@ li {
 
     line-height: 1.5;
 
-    color: #FFF9EF;
+    color: #FDFBFF;
 }
 
 .menu-close {
     position: absolute;
 
     top: -8px;
+
     right: 0;
 
     width: 34px;
     height: 34px;
 
-    border: 1px solid var(--gold);
+    border:
+        1px solid rgba(255,255,255,.75);
 
     border-radius: 50%;
 
-    background: transparent;
+    background:
+        rgba(255,255,255,.12);
 
-    color: #FFF9EF;
+    color: #FFFFFF;
 
     cursor: pointer;
 
@@ -1363,9 +1432,9 @@ li {
 
     cursor: pointer;
 
-    background: #FFF9EF;
+    background: #FCFBFF;
 
-    color: var(--brown);
+    color: var(--dark-accent);
 
     font-size: 14px;
 
@@ -1374,10 +1443,14 @@ li {
     pointer-events: auto !important;
 
     touch-action: manipulation;
+
+    box-shadow:
+        0 4px 15px
+            rgba(114,122,153,.08);
 }
 
 .toggle-menu .button button:hover {
-    background: var(--gold);
+    background: var(--deep-lilac);
 
     color: #FFFFFF;
 }
@@ -1390,8 +1463,13 @@ li {
     margin-right: 4px;
 }
 
+
+/* LOCATION */
+
 .location .button .waze {
-    background: var(--sage);
+    background: #B9D9EA;
+
+    color: var(--dark-accent);
 }
 
 
@@ -1415,11 +1493,15 @@ li {
 }
 
 #rsvp-menu .button button:first-child {
-    background: var(--sage);
+    background: #C7E5F5;
+
+    color: var(--dark-accent);
 }
 
 #rsvp-menu .button button:last-child {
-    background: var(--rose);
+    background: #D8C9EE;
+
+    color: var(--dark-accent);
 }
 
 
@@ -1437,15 +1519,18 @@ li {
     display: flex;
 
     align-items: center;
+
     justify-content: space-between;
 
     gap: 15px;
 
     padding: 14px;
 
-    border: 1px solid rgba(217,166,46,.34);
+    border:
+        1px solid rgba(216,201,238,.45);
 
-    background: rgba(255,255,255,.50);
+    background:
+        rgba(255,255,255,.60);
 }
 
 .first-section {
@@ -1461,7 +1546,7 @@ li {
 .first-section > i {
     font-size: 38px;
 
-    color: var(--rose);
+    color: var(--deep-lilac);
 }
 
 .person .name {
@@ -1471,13 +1556,16 @@ li {
 }
 
 .person .name span:first-child {
-    font-family: "Playfair Display", serif;
+    font-family:
+        "Playfair Display", serif;
+
+    color: var(--dark-accent);
 }
 
 .person .name span:last-child {
     font-size: 13px;
 
-    color: #6F7D91;
+    color: #7D8798;
 }
 
 .second-section {
@@ -1490,11 +1578,12 @@ li {
     width: 38px;
     height: 38px;
 
-    border: 1px solid var(--gold);
+    border:
+        1px solid var(--silver-lilac);
 
     background: var(--paper);
 
-    color: var(--brown);
+    color: var(--dark-accent);
 
     border-radius: 50%;
 
@@ -1506,7 +1595,7 @@ li {
 }
 
 .second-section button:hover {
-    background: var(--rose);
+    background: var(--deep-lilac);
 
     color: white;
 }
@@ -1527,7 +1616,7 @@ li {
 .form-ucapan label {
     font-size: 14px;
 
-    color: var(--brown);
+    color: var(--dark-accent);
 
     margin-top: 8px;
 }
@@ -1536,9 +1625,10 @@ li {
 .form-ucapan textarea {
     width: 100%;
 
-    border: 1px solid rgba(217,166,46,.48);
+    border:
+        1px solid rgba(216,201,238,.60);
 
-    background: white;
+    background: #FFFFFF;
 
     padding: 13px;
 
@@ -1549,6 +1639,8 @@ li {
     font-size: 16px;
 
     color: var(--text);
+
+    border-radius: 2px;
 }
 
 .form-ucapan textarea {
@@ -1557,7 +1649,11 @@ li {
 
 .form-ucapan input:focus,
 .form-ucapan textarea:focus {
-    border-color: var(--rose);
+    border-color: var(--deep-lilac);
+
+    box-shadow:
+        0 0 0 2px
+            rgba(216,201,238,.20);
 }
 
 .form-ucapan .button {
@@ -1565,11 +1661,15 @@ li {
 }
 
 .form-ucapan .hantar {
-    background: var(--sage);
+    background: var(--baby-blue);
+
+    color: var(--dark-accent);
 }
 
 .form-ucapan .tutup {
-    background: var(--rose);
+    background: var(--lilac);
+
+    color: var(--dark-accent);
 }
 
 
@@ -1584,15 +1684,16 @@ li {
 .success-box > i {
     font-size: 60px;
 
-    color: var(--sage);
+    color: #91BFD5;
 
     margin-bottom: 10px;
 }
 
 .success-box h2 {
-    font-family: "Playfair Display", serif;
+    font-family:
+        "Playfair Display", serif;
 
-    color: var(--brown);
+    color: var(--dark-accent);
 
     margin-bottom: 8px;
 }
@@ -1622,7 +1723,8 @@ li {
 .fade-top-2,
 .fade-top-3,
 .fade-top-4 {
-    animation: introFade 1s ease both;
+    animation:
+        introFade 1s ease both;
 }
 
 .fade-top-2 {
@@ -1647,13 +1749,15 @@ li {
     from {
         opacity: 0;
 
-        transform: translateY(-20px);
+        transform:
+            translateY(-20px);
     }
 
     to {
         opacity: 1;
 
-        transform: translateY(0);
+        transform:
+            translateY(0);
     }
 }
 
@@ -1662,13 +1766,15 @@ li {
     from {
         opacity: 0;
 
-        transform: translateY(20px);
+        transform:
+            translateY(20px);
     }
 
     to {
         opacity: 1;
 
-        transform: translateY(0);
+        transform:
+            translateY(0);
     }
 }
 
@@ -1677,13 +1783,15 @@ li {
     from {
         opacity: 0;
 
-        transform: scale(.65);
+        transform:
+            scale(.65);
     }
 
     to {
         opacity: 1;
 
-        transform: scale(1);
+        transform:
+            scale(1);
     }
 }
 
@@ -1692,13 +1800,15 @@ li {
     from {
         opacity: 0;
 
-        transform: translateY(20px);
+        transform:
+            translateY(20px);
     }
 
     to {
         opacity: 1;
 
-        transform: translateY(0);
+        transform:
+            translateY(0);
     }
 }
 
@@ -1726,11 +1836,11 @@ li {
    POST-OPENING LAYER FIX
    ========================================================= */
 
-/* VIDEO TAK BOLEH LAGI HALANG KAD */
 .video-intro.hide {
     display: none !important;
 
     opacity: 0 !important;
+
     visibility: hidden !important;
 
     pointer-events: none !important;
@@ -1738,12 +1848,11 @@ li {
     z-index: -1 !important;
 }
 
-
-/* OPENING TAK BOLEH LAGI HALANG KAD */
 .wedding-opening.opening-hide {
     display: none !important;
 
     opacity: 0 !important;
+
     visibility: hidden !important;
 
     pointer-events: none !important;
@@ -1751,7 +1860,11 @@ li {
     z-index: -1 !important;
 }
 
-/* MENU PALING ATAS */
+
+/* =========================================================
+   MENU PALING ATAS
+   ========================================================= */
+
 .footer .menu {
     z-index: 12000 !important;
 
@@ -1765,7 +1878,10 @@ li {
 }
 
 
-/* TOGGLE MENU PALING ATAS */
+/* =========================================================
+   TOGGLE MENU PALING ATAS
+   ========================================================= */
+
 .toggle-menu {
     z-index: 13000 !important;
 }
@@ -1776,6 +1892,7 @@ li {
 
 
 /* SEMUA BUTTON DALAM POPUP */
+
 .toggle-menu button {
     position: relative;
 
@@ -1851,6 +1968,7 @@ li {
 
     .door-inner p {
         font-size: 9px;
+
         letter-spacing: 3px;
     }
 
@@ -1927,7 +2045,8 @@ li {
     }
 
     .counter-boxes {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns:
+            repeat(2, 1fr);
     }
 
     .footer .menu li {
